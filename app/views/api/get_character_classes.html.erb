@@ -1,0 +1,24 @@
+<body ng-app="app" ng-controller="CharacterClassesCtrl" ng-init="setClasses(<%= @classes.to_json %>)">
+	<div class="container-fluid">
+	  <div class="row">
+	    <div class="col-md-2">
+	      <!--Sidebar content-->
+
+			Search: <input ng-model="query">
+			Sort by:
+			<select ng-model="orderProp">
+			  <option value="name">Alphabetical</option>
+			  <option value="code">Code</option>
+			</select>
+	    </div>
+	    <div class="col-md-10">
+	    <!--Body content-->
+	        <h2>Classes:</h2>
+	        <div ng-repeat="class in classes | filter: query">
+	        	<h3>{{class.id + '. ' + class.name}}</h3>
+	        </div>
+	    </div>
+	  </div>
+	</div>
+
+</body>
