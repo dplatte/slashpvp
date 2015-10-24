@@ -1,0 +1,20 @@
+<body ng-app="app" ng-controller="CharacterClassesCtrl">
+	<div class="container-fluid">
+	  <div class="row">
+	    <div class="col-md-2">
+	      <!--Sidebar content-->
+
+			Search: <input ng-model="query">
+	    </div>
+	    <div class="col-md-10">
+	    <!--Body content-->
+	        <h2>Classes:</h2>
+	        <% @histories.each_with_index do |h, i| %>
+	        <div>
+	        	<h3><%= i %>.<%= h.victory ? 'WIN' : 'LOSS' %> - <%=h.character.rating%>:<%= h.character.name %> <%= h.rating_change %> - <%= h.retrieved_time %></h3>
+	        </div>
+	        <% end %>
+	    </div>
+	  </div>
+	</div>
+</body>

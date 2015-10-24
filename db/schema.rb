@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151023182045) do
+ActiveRecord::Schema.define(version: 20151024054451) do
 
   create_table "brackets", force: true do |t|
     t.string   "name"
@@ -156,6 +156,11 @@ ActiveRecord::Schema.define(version: 20151023182045) do
     t.integer  "character_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "old_rating"
+    t.integer  "new_rating"
+    t.integer  "old_ranking"
+    t.integer  "new_ranking"
+    t.datetime "retrieved_time"
   end
 
   add_index "match_histories", ["bracket_id"], name: "index_match_histories_on_bracket_id", using: :btree

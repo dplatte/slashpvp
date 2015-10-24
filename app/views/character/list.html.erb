@@ -1,4 +1,4 @@
-<body ng-app="app" ng-controller="CharacterClassesCtrl">
+<body ng-app="app" ng-controller="CharacterCtrl" ng-init="getLadder('<%= @region.abbr %>', '<%= @bracket.name %>')">
 	<div class="container-fluid">
 	  <div class="row">
 	    <div class="col-md-2">
@@ -9,11 +9,9 @@
 	    <div class="col-md-10">
 	    <!--Body content-->
 	        <h2>Classes:</h2>
-	        <% @characters.each do |c| %>
-	        <div>
-	        	<h3><%= c.ranking %>. <%= c.name %></h3>
+	        <div ng-repeat="c in characters" ng-show="([c] | filter:query).length > 0">
+	        	<h3>{{c.ranking}}. {{c.name}} - {{c.rating}}</h3>
 	        </div>
-	        <% end %>
 	    </div>
 	  </div>
 	</div>
