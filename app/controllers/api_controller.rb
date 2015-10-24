@@ -243,36 +243,37 @@ class ApiController < ApplicationController
 
   #Using more selects for characters
   def updateLadder
-    ActiveRecord::Base.logger.level = 1
 
-    # region = Region.find_by_abbr(params[:region])
-    # bracket = Bracket.find_by_name(params[:bracket])
-    # if(region && bracket)
-    #   api_key = Rails.application.secrets.battlenet_api_key
-    #   resp = HTTParty.get('https://' + region.abbr + '.api.battle.net/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key)
+    region = Region.find_by_abbr(params[:region])
+    bracket = Bracket.find_by_name(params[:bracket])
+    if(region && bracket)
+      api_key = Rails.application.secrets.battlenet_api_key
+      resp = HTTParty.get('https://' + region.abbr + '.api.battle.net/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key)
 
-    #   response = JSON.parse(resp.body)['rows']
+      Rails.logger.debug(resp.success?)
+      if(resp.success?)
+        response = JSON.parse(resp.body)['rows']
 
-    #   unchangedCharacterIds = Character.where(bracket_id: bracket.id).pluck(:id)
+        unchangedCharacterIds = Character.where(bracket_id: bracket.id, region_id: region.id).pluck(:id)
 
-    #   response.each do |s|
+        response.each do |s|
 
-    #     character = Character.where(name: s['name'], realm_name: s['realmName'], bracket_id: bracket.id, region_id: region.id).first_or_initialize
-    #     character.update_attributes(gender_id: s['genderId'], character_race_id: s['raceId'], character_class_id: s['classId'], character_spec_id: s['specId'], faction_id: s['factionId'], rating: s['rating'], ranking: s['ranking'], season_wins: s['seasonWins'], season_losses: s['seasonLosses'], weekly_wins: s['weeklyWins'], weekly_losses: s['weeklyLosses'])
-    #     unchangedCharacterIds.delete(character.id)
+          character = Character.where(name: s['name'], realm_name: s['realmName'], bracket_id: bracket.id, region_id: region.id).first_or_initialize
+          character.update_attributes(gender_id: s['genderId'], character_race_id: s['raceId'], character_class_id: s['classId'], character_spec_id: s['specId'], faction_id: s['factionId'], rating: s['rating'], ranking: s['ranking'], season_wins: s['seasonWins'], season_losses: s['seasonLosses'], weekly_wins: s['weeklyWins'], weekly_losses: s['weeklyLosses'])
+          unchangedCharacterIds.delete(character.id)
 
-    #   end
+        end
 
-    #   #clean up characters that fell off the ladder
-    #   unchangedCharacters = Character.where.not(ranking: nil).where(id: unchangedCharacterIds, bracket_id: bracket.id)
-    #   unchangedCharacters.each do |c|
-    #     c.update_attributes(ranking: nil)
-    #   end
-    # end
+        #clean up characters that fell off the ladder
+        unchangedCharacters = Character.where.not(ranking: nil).where(id: unchangedCharacterIds, bracket_id: bracket.id, region_id: region.id)
+        unchangedCharacters.each do |c|
+          c.update_attributes(ranking: nil)
+        end
+      end
+    end
 
 
-    # render :json => unchangedCharacters
-    render 'success'
+    render :json => unchangedCharacters
   end
 
 end

@@ -9,20 +9,21 @@ class Character < ActiveRecord::Base
   has_one :faction
 
 
-  def updateLadder(r, b)
-    ActiveRecord::Base.logger.level = 1
-
+  def self.updateLadder(r, b)
     region = Region.find_by_abbr(r)
     bracket = Bracket.find_by_name(b)
+    Rails.logger.error('after getting the data')
+    Rails.logger.error("Region***************: " + region.abbr)
+    Rails.logger.error("Bracket***************: " + bracket.name)
     if(region && bracket)
       api_key = Rails.application.secrets.battlenet_api_key
       resp = HTTParty.get('https://' + region.abbr + '.api.battle.net/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key)
+      Rails.logger.error("Inside loop after request")
+      if(resp.success?)
+        response = JSON.parse(resp.body)['rows']
 
-      response = JSON.parse(resp.body)['rows']
+        unchangedCharacterIds = Character.where(bracket_id: bracket.id, region_id: region.id).pluck(:id)
 
-      unchangedCharacterIds = Character.where(bracket_id: bracket.id).pluck(:id)
-
-      if(response.success?)
         response.each do |s|
 
           character = Character.where(name: s['name'], realm_name: s['realmName'], bracket_id: bracket.id, region_id: region.id).first_or_initialize
@@ -32,7 +33,7 @@ class Character < ActiveRecord::Base
         end
 
         #clean up characters that fell off the ladder
-        unchangedCharacters = Character.where.not(ranking: nil).where(id: unchangedCharacterIds, bracket_id: bracket.id)
+        unchangedCharacters = Character.where.not(ranking: nil).where(id: unchangedCharacterIds, bracket_id: bracket.id, region_id: region.id)
         unchangedCharacters.each do |c|
           c.update_attributes(ranking: nil)
         end

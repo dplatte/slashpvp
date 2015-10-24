@@ -5,7 +5,8 @@
 
 # Example:
 #
-# set :output, "/path/to/my/cron_log.log"
+set :environment, 'development' 
+set :output, "log/whenever.log"
 #
 # every 2.hours do
 #   command "/usr/bin/some_great_command"
@@ -13,8 +14,8 @@
 #   rake "some:great:rake:task"
 # end
 #
-every 30.seconds do
-  runner "Character.updateLadder" 'US' '3v3'
+every 1.minute do
+  runner "Character.updateLadder('us','3v3')"
 end
 
 # Learn more: http://github.com/javan/whenever

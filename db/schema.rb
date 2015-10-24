@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151023045938) do
+ActiveRecord::Schema.define(version: 20151023182045) do
 
   create_table "brackets", force: true do |t|
     t.string   "name"
@@ -132,6 +132,10 @@ ActiveRecord::Schema.define(version: 20151023045938) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "ladder_standings", ["bracket_id"], name: "index_ladder_standings_on_bracket_id", using: :btree
+  add_index "ladder_standings", ["character_id"], name: "index_ladder_standings_on_character_id", using: :btree
+  add_index "ladder_standings", ["region_id"], name: "index_ladder_standings_on_region_id", using: :btree
 
   create_table "locales", force: true do |t|
     t.string   "name"
