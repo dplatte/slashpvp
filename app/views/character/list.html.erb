@@ -1,18 +1,45 @@
 <body ng-app="app" ng-controller="CharacterCtrl" ng-init="getLadder('<%= @region.abbr %>', '<%= @bracket.name %>')">
 	<div class="container-fluid">
-	  <div class="row">
-	    <div class="col-md-2">
-	      <!--Sidebar content-->
-
-			Search: <input ng-model="query">
-	    </div>
-	    <div class="col-md-10">
-	    <!--Body content-->
-	        <h2>Classes:</h2>
-	        <div ng-repeat="c in characters" ng-show="([c] | filter:query).length > 0">
-	        	<h3>{{c.ranking}}. {{c.name}} - {{c.rating}}</h3>
-	        </div>
-	    </div>
+		<div class="row">
+			<div class="col-xs-12 col-md-2">
+				<div class="row m-y">
+					<div class="col-xs-12">
+						<div class="input-group">
+							<input type="text" ng-model="query" class="form-control" placeholder="Filter">
+						</div>
+					</div>
+				</div>
+				<div class="row filterIcons">
+					<% @classes.each do |c| %>
+			    		<div class="col-xs-1 col-md-2 col-md-offset-10 p-x-0 col-centered">
+			    			<!-- <div class="filterIconSpecs" hidden>
+					    		<% c.character_specs.each do |s| %>
+					    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
+					    		<% end %>
+					    	</div> -->
+				    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'filterClassIcon img-rounded', data: {id: c.id}) %>
+			    		</div>
+			    	<% end %>
+				</div>
+		    </div>
+		    <div class="col-xs-12 col-md-8 p-x-0">
+		    	<table class="table table-inverse table-hover">
+		    		<thead class="thead-inverse">
+		    			<tr>
+		    				<th>Ranking</th>
+		    				<th>Name</th>
+		    				<th>Rating</th>
+		    			</tr>
+		    		</thead>
+		    		<tbody id="ladderContent">
+		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.faction_id ? 'table-danger' : 'table-info'">
+		    				<th scope="row">{{c.ranking}}</th>
+		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
+		    				<td>{{c.rating}}</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+		    </div>
 	  </div>
 	</div>
 </body>

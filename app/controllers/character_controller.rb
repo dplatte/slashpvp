@@ -6,6 +6,7 @@ class CharacterController < ApplicationController
     # if(region && bracket)
     # 	@characters = Character.where(bracket_id: bracket.id, region_id: region.id).where.not(ranking: nil).order('ranking').all
     # end
+    @classes = CharacterClass.all
   end
 
   def ladderJson

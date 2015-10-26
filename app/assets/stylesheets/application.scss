@@ -1,0 +1,74 @@
+$enable-flex: true;
+
+@import "bootstrap";
+
+body {
+	overflow:hidden;
+}
+.table-inverse {
+	thead {
+		display:table;
+		width:100%;
+		table-layout:fixed;
+	}
+	tbody {
+		display:block;
+		table-layout:fixed;
+		.table-active, 
+		.table-success, 
+		.table-info, 
+		.table-warning,
+		.table-danger {
+			color:black;
+		}
+		tr {
+			display:table;
+			width:100%;
+			table-layout:fixed;
+		}
+	}
+}
+
+#ladderContent {
+	overflow-y:scroll;
+}
+
+.filterIconSpecs {
+	position:relative;
+    right:-200px;
+    top:10px;
+}
+.filterIcons {
+	img {
+		height:100%;
+		width:100%;
+		border:2px solid white;
+		cursor:pointer;
+		filter: grayscale(100%);
+	    -webkit-filter: grayscale(100%);
+	    opacity:.5;
+		&.checked {
+			opacity:1;
+			filter: grayscale(0%);
+	    	-webkit-filter: grayscale(0%);
+		}
+	}
+	.filterClassIcon {
+		&:hover {
+			opacity:1;
+			filter: grayscale(0%);
+	    	-webkit-filter: grayscale(0%);
+		}
+	}
+}
+
+.input-group-addon {
+	line-height: 38px;
+	padding-top:0;
+	padding-bottom:0;
+}
+
+.col-centered{
+	float: none;
+	margin: 0 auto;
+}

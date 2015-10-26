@@ -2,11 +2,11 @@ class Character < ActiveRecord::Base
   has_many :match_histories
   belongs_to :region
   belongs_to :bracket
-  has_one :character_spec
-  has_one :character_class
-  has_one :character_race
-  has_one :gender
-  has_one :faction
+  belongs_to :character_spec
+  belongs_to :character_class
+  belongs_to :character_race
+  belongs_to :gender
+  belongs_to :faction
 
 
   def self.updateLadder(r, b)
