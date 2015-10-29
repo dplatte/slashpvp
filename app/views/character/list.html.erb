@@ -22,10 +22,15 @@
 					    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
 					        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding">‹</a>
 					    </li>
+					    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled ng-scope">
+					        <a href="" class="ng-binding">...</a>
+					    </li>
 					    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
 					        <a href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
 					    </li>
-
+					    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope">
+					        <a href="" class="ng-binding">...</a>
+					    </li>
 					    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
 					        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding">›</a>
 					    </li>

@@ -118,25 +118,18 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	$scope.updateCurrentPage = function(page) {
 		$scope.pagination.last = Math.ceil($scope.filteredCharacters.length / $scope.pagination.itemsPerPage);
 
-		var firstDisplayPage = 1;
-		var lastDisplayPage = 1;
-		if(page + 4 < 9) {
-			lastDisplayPage = 9;
-		} else {
-			lastDisplayPage = page + 4;
-		}
-		if($scope.pagination.last < lastDisplayPage) {
-			lastDisplayPage = $scope.pagination.last;
-		}
-		if(page - 4 < 1) {
-			firstDisplayPage = 1;
-		} else {
-			firstDisplayPage = page - 4;
-		}
-
 		$scope.pages = [];
-		for (var i = firstDisplayPage; i <= lastDisplayPage; i++) {
-		    $scope.pages.push(i);
+		var endPage = page + 4;
+		var startPage = page - 4;
+		if($scope.pagination.last - startPage < 8) {
+			startPage = $scope.pagination.last - 8;
+		}
+		for(var i = startPage; i <= endPage; i++) {
+			if(i > 0 && i <= $scope.pagination.last) {
+				$scope.pages.push(i);
+			} else if(endPage < $scope.pagination.last) {
+				endPage++;
+			}
 		}
 
 		$scope.pagination.current = page;
@@ -195,14 +188,17 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
 		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
 
-		//FIX THIS FOR FIRST SCROLL UP
-		$('#ladderContent').scrollTop(curScrollHeight - $('#ladderContent')[0].scrollHeight / 3);
+		//STILL AN ISSUE WITH SCROLLING AT THE END OF THE LIST, BOTH UP AND DOWN
+		if($scope.pagination.current < $scope.pagination.last) {
+			$('#ladderContent').scrollTop(curScrollHeight - $('#ladderContent')[0].scrollHeight / 3);
+		}
 
 		console.log("Size of limit: " + $scope.limitVar);
 		pageUpdateFlag = true;
 	};
 
 	$scope.updateUpperLimits = function() {
+		var curScrollHeight = $('#ladderContent').scrollTop();
 		pageUpdateFlag = false;
 		console.log(parseInt($scope.pagination.current));
 		console.log('updating upper limits');
@@ -218,7 +214,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
 		$scope.$apply();
 		if($scope.pagination.current > 1) {
-			$('#ladderContent').scrollTop(2 * $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() - 10);
+			$('#ladderContent').scrollTop(curScrollHeight + $('#ladderContent')[0].scrollHeight / 3);
 		}
 
 		pageUpdateFlag = true;
@@ -227,17 +223,15 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	$('#ladderContent').scroll(function(){
 		var top = $('#ladderContent').scrollTop();
 		if($scope.pagination.current > 1 && pageUpdateFlag
-	    	&& top < $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() 
-	    	&& $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar) {
+	    	&& top < $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()) {
 	    	$scope.updateUpperLimits();
 	    } else if($scope.pagination.current == 1 
 	    	&& pageUpdateFlag
-	    	&& top > $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() 
-	    	&& $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar){
+	    	&& top > $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()){
+	        //console.log($($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage);
 	        $scope.updateLowerLimits();
-	    } else if(top > 2 * $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() 
-	    	&& pageUpdateFlag
-	    	&& $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar) {
+	    } else if(top > 2 * $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()
+	    	&& pageUpdateFlag) {
 	    	$scope.updateLowerLimits();
 		} 
 	});
