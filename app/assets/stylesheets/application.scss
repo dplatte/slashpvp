@@ -2,9 +2,13 @@ $enable-flex: true;
 
 @import "bootstrap";
 
+html {
+	overflow:hidden;
+}
 body {
 	overflow:hidden;
 }
+
 .table-inverse {
 	thead {
 		display:table;
@@ -31,6 +35,8 @@ body {
 
 #ladderContent {
 	overflow-y:scroll;
+	-webkit-overflow-scrolling: touch;
+	min-height:150px;
 }
 
 .filterIconSpecs {
@@ -39,6 +45,7 @@ body {
     top:10px;
 }
 .filterIcons {
+	justify-content:center;
 	img {
 		height:100%;
 		width:100%;
@@ -48,13 +55,6 @@ body {
 	    -webkit-filter: grayscale(100%);
 	    opacity:.5;
 		&.checked {
-			opacity:1;
-			filter: grayscale(0%);
-	    	-webkit-filter: grayscale(0%);
-		}
-	}
-	.filterClassIcon {
-		&:hover {
 			opacity:1;
 			filter: grayscale(0%);
 	    	-webkit-filter: grayscale(0%);

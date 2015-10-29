@@ -1,11 +1,25 @@
-angular.module('app').controller('CharacterCtrl', function($scope, $http) {
+angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeout) {
 	
 	$scope.init = function() {
 		$scope.characters = [];
-		$scope.limitVar = 100;
+		$scope.filteredCharacters = [];
+		$scope.limitVar = 150;
 		$scope.beginVar = 0;
 		$scope.limitStep = 50;
 		$scope.query = "";
+		$scope.classFilter = {
+			1: false,
+			2: false,
+			3: false,
+			4: false,
+			5: false,
+			6: false,
+			7: false,
+			8: false,
+			9: false,
+			10: false,
+			11: false
+		}
 		$scope.specFilter = {
 			62: false,
 			63: false,
@@ -42,19 +56,98 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http) {
 			269: false,
 			270: false
 		}
+
+		$scope.pages = [];
+		$scope.pagination = {
+			current: 1,
+			last: 1,
+			displayPages: 9,
+			itemsPerPage: 50,
+			container: '#ladderContent',
+			itemContainer: 'tr'
+		}
 	};
 
-	$scope.$watchCollection('specFilter', function() {
+	var pageUpdateFlag = true;
+
+	$scope.$watchCollection('classFilter', function() {
 		$scope.beginVar = 0;
 		$('#ladderContent').scrollTop(0);
 	});
+
+	$scope.$watchCollection('filteredCharacters', function() {
+		if($scope.filteredCharacters.length) {
+			$scope.setCurrentPage(1);
+			$('#loadingGif').hide();
+		} else {
+			$('#loadingGif').show();
+		}
+		console.log("characters size: " + $scope.filteredCharacters.length);
+
+		//$('#ladderContent').scrollTop(0);
+	});
+
+	$scope.$watchCollection('pages', function() {
+		$('#ladderContent').height($(window).height() - $('#ladderContent').offset().top);
+	});
+
+	$scope.$watch('query', function() {
+		$scope.beginVar = 0;
+		$('#ladderContent').scrollTop(0);
+	});
+
+	$scope.setCurrentPage = function(page) {
+		$scope.updateCurrentPage(page);
+		if(page == 1) {
+			$scope.beginVar	= 0;
+			$('#ladderContent').scrollTop(0)
+		} else {
+			$scope.beginVar	= page * $scope.pagination.itemsPerPage - $scope.pagination.itemsPerPage * 2;
+			$('#ladderContent').scrollTop(48 * 51)
+		}
+
+		console.log('setting current page');
+		console.log("begin var: " + $scope.beginVar);
+		console.log("limit var: " + $scope.limitVar);
+		console.log("current var: " + $scope.pagination.current);
+		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
+		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
+		
+	};
+
+	$scope.updateCurrentPage = function(page) {
+		$scope.pagination.last = Math.ceil($scope.filteredCharacters.length / $scope.pagination.itemsPerPage);
+
+		var firstDisplayPage = 1;
+		var lastDisplayPage = 1;
+		if(page + 4 < 9) {
+			lastDisplayPage = 9;
+		} else {
+			lastDisplayPage = page + 4;
+		}
+		if($scope.pagination.last < lastDisplayPage) {
+			lastDisplayPage = $scope.pagination.last;
+		}
+		if(page - 4 < 1) {
+			firstDisplayPage = 1;
+		} else {
+			firstDisplayPage = page - 4;
+		}
+
+		$scope.pages = [];
+		for (var i = firstDisplayPage; i <= lastDisplayPage; i++) {
+		    $scope.pages.push(i);
+		}
+
+		$scope.pagination.current = page;
+	}
 
 	$scope.customCharacterFilter = function (character) {
 	    // Display the wine if
 	    var re = new RegExp($scope.query, 'i');
 
-	    return ($scope.specFilter[character.character_spec_id] || 
-	    	noFilter($scope.specFilter)) &&
+	    return ($scope.classFilter[character.character_class_id] || 
+	    	noFilter($scope.classFilter)) &&
 	    	re.test(character.name);
 	};
 
@@ -85,47 +178,83 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http) {
 	};
 
 	$scope.updateLowerLimits = function() {
+		pageUpdateFlag = false;
+		console.log(parseInt($scope.pagination.current));
 		console.log('updating lower limits');
-		$scope.beginVar += 50;
+		var current = $scope.pagination.current;
+		$scope.updateCurrentPage($scope.pagination.current + 1);
+		if(current > 1) {
+			$scope.beginVar += 50;
+		}
 		$scope.$apply();
-		$('#ladderContent').scrollTop($('#ladderContent')[0].scrollHeight / 2 - $('#ladderContent').height());
+		console.log("current var: " + $scope.pagination.current);
+		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
+		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
+		$('#ladderContent').scrollTop(($('#ladderContent')[0].scrollHeight / 3) - $('#ladderContent').height());
+
+		console.log("Size of limit: " + $scope.limitVar);
+		pageUpdateFlag = true;
 	};
 
 	$scope.updateUpperLimits = function() {
+		pageUpdateFlag = false;
+		console.log(parseInt($scope.pagination.current));
 		console.log('updating upper limits');
-		$scope.beginVar -= 50;
+		$scope.updateCurrentPage($scope.pagination.current - 1);
+		
+		if($scope.pagination.current > 1) {
+			$scope.beginVar -= 50;
+		}
+		console.log("begin var: " + $scope.beginVar);
+		console.log("limit var: " + $scope.limitVar);
+		console.log("current var: " + $scope.pagination.current);
+		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
+		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
 		$scope.$apply();
-		$('#ladderContent').scrollTop($('#ladderContent')[0].scrollHeight / 2);
-		$('#ladderContent').scrollTop();
+		if($scope.pagination.current > 1) {
+			$('#ladderContent').scrollTop(2 * $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height());
+		}
+
+		pageUpdateFlag = true;
 	};
 
 	$('#ladderContent').scroll(function(){
-	    if ($('#ladderContent').scrollTop() == $('#ladderContent')[0].scrollHeight - $('#ladderContent').height() && $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar){
-	        $scope.updateLowerLimits();
-	    } else if($('#ladderContent').scrollTop() <= 0 && $scope.beginVar > 0) {
+		var top = $('#ladderContent').scrollTop();
+		if($scope.pagination.current > 1 && pageUpdateFlag
+	    	&& top < $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() 
+	    	&& $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar) {
 	    	$scope.updateUpperLimits();
-	    }
+	    } else if($scope.pagination.current == 1 
+	    	&& pageUpdateFlag
+	    	&& top > $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() 
+	    	&& $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar){
+	        $scope.updateLowerLimits();
+	    } else if(top > 2 * $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() 
+	    	&& pageUpdateFlag
+	    	&& $scope.filteredCharacters.length > $scope.beginVar + $scope.limitVar) {
+	    	$scope.updateLowerLimits();
+		} 
 	});
 
 	$('.filterClassIcon').on('click', function(){
         if(!$(this).is('.checked')){
             $(this).addClass('checked');
-            $(this).siblings('.filterIconSpecs').animate({right:0}, 'slow');
-            $(this).siblings('.filterIconSpecs').children().each(function() {
-            	$scope.specFilter[$(this).data('id')] = true;
-            	if(!$(this).is('.checked')) {
-            		$(this).addClass('checked');
-            	}
-            });
+            //$(this).siblings('.filterIconSpecs').animate({right:0}, 'slow');
+            //$(this).siblings('.filterIconSpecs').children().each(function() {
+            	$scope.classFilter[$(this).data('id')] = true;
+            	//if(!$(this).is('.checked')) {
+            	//	$(this).addClass('checked');
+            	//}
+            //});
         } else {
             $(this).removeClass('checked');
-            $(this).siblings('.filterIconSpecs').animate({right:-200}, 'slow');
-            $(this).siblings('.filterIconSpecs').children().each(function() {
-            	$scope.specFilter[$(this).data('id')] = false;
-            	if($(this).is('.checked')) {
-            		$(this).removeClass('checked');
-            	}
-            });
+            //$(this).siblings('.filterIconSpecs').animate({right:-200}, 'slow');
+            //$(this).siblings('.filterIconSpecs').children().each(function() {
+            	$scope.classFilter[$(this).data('id')] = false;
+            	//if($(this).is('.checked')) {
+            	//	$(this).removeClass('checked');
+            	//}
+            //});
         }
         $scope.$apply();
     });
@@ -150,6 +279,11 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http) {
         $scope.$apply();
     });
 
-	$('#ladderContent').height($(window).height() - $('#ladderContent').offset().top);
+	$(window).resize(function() {
+	    $('#ladderContent').height($(window).height() - $('#ladderContent').offset().top);
+	});
+
+	$(window).trigger('resize');
+	
 	$scope.init();
 });

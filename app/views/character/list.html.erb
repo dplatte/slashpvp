@@ -1,5 +1,8 @@
 <body ng-app="app" ng-controller="CharacterCtrl" ng-init="getLadder('<%= @region.abbr %>', '<%= @bracket.name %>')">
 	<div class="container-fluid">
+	<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
+		<%= image_tag('kappa-loading.gif') %>
+	</div>
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
 				<div class="row m-y">
@@ -9,9 +12,35 @@
 						</div>
 					</div>
 				</div>
+		    </div>
+		    <div class="hidden-sm-down col-md-8">
+		    	<nav class="text-center">
+		    		<ul class="pagination">
+					    <li ng-class="{ disabled : pagination.current == 1 }">
+					        <a href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
+					    </li>
+					    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
+					        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding">‹</a>
+					    </li>
+					    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+					        <a href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
+					    </li>
+
+					    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
+					        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding">›</a>
+					    </li>
+					    <li ng-class="{ disabled : pagination.current == pagination.last }">
+					        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
+					    </li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-12 col-md-2">
 				<div class="row filterIcons">
 					<% @classes.each do |c| %>
-			    		<div class="col-xs-1 col-md-2 col-md-offset-10 p-x-0 col-centered">
+			    		<div class="col-xs-2 col-sm-1 col-md-3 col-md-offset-9 col-lg-2 col-lg-offset-10 p-x-0">
 			    			<!-- <div class="filterIconSpecs" hidden>
 					    		<% c.character_specs.each do |s| %>
 					    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
@@ -21,21 +50,22 @@
 			    		</div>
 			    	<% end %>
 				</div>
-		    </div>
-		    <div class="col-xs-12 col-md-8 p-x-0">
+			</div>
+		    <div class="col-xs-12 col-md-8 p-x-0" style="justify-content:center;">
+		    	
 		    	<table class="table table-inverse table-hover">
 		    		<thead class="thead-inverse">
 		    			<tr>
-		    				<th>Ranking</th>
-		    				<th>Name</th>
-		    				<th>Rating</th>
+		    				<th width="34%">Rank</th>
+		    				<th class="text-center" width="32%">Name</th>
+		    				<th class="text-right" width="34%">Rating</th>
 		    			</tr>
 		    		</thead>
 		    		<tbody id="ladderContent">
 		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.faction_id ? 'table-danger' : 'table-info'">
-		    				<th scope="row">{{c.ranking}}</th>
-		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
-		    				<td>{{c.rating}}</td>
+		    				<th width="10%" scope="row">{{c.ranking}}</th>
+		    				<td width="70%"><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
+		    				<td class="text-right" width="20%">{{c.rating}}</td>
 		    			</tr>
 		    		</tbody>
 		    	</table>

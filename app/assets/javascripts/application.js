@@ -17,3 +17,5 @@
 //= require angular-app/app
 //= require_tree ./angular-app/controllers
 //= require_tree .
+//= require websocket_rails/main
+

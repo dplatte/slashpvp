@@ -42,3 +42,4 @@ gem 'angularjs-rails'
 gem 'yaml_db'
 gem 'whenever', :require => false
 gem 'httparty'
+gem 'websocket-rails'
