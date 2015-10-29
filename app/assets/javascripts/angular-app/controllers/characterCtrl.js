@@ -178,6 +178,8 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	};
 
 	$scope.updateLowerLimits = function() {
+
+		var curScrollHeight = $('#ladderContent').scrollTop();
 		pageUpdateFlag = false;
 		console.log(parseInt($scope.pagination.current));
 		console.log('updating lower limits');
@@ -185,12 +187,16 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		$scope.updateCurrentPage($scope.pagination.current + 1);
 		if(current > 1) {
 			$scope.beginVar += 50;
+		} else {
+			curScrollHeight += $('#ladderContent')[0].scrollHeight / 3;
 		}
 		$scope.$apply();
 		console.log("current var: " + $scope.pagination.current);
 		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
 		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
-		$('#ladderContent').scrollTop(($('#ladderContent')[0].scrollHeight / 3) - $('#ladderContent').height());
+
+		//FIX THIS FOR FIRST SCROLL UP
+		$('#ladderContent').scrollTop(curScrollHeight - $('#ladderContent')[0].scrollHeight / 3);
 
 		console.log("Size of limit: " + $scope.limitVar);
 		pageUpdateFlag = true;
@@ -212,7 +218,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
 		$scope.$apply();
 		if($scope.pagination.current > 1) {
-			$('#ladderContent').scrollTop(2 * $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height());
+			$('#ladderContent').scrollTop(2 * $('#ladderContent')[0].scrollHeight / 3 - $('#ladderContent').height() - 10);
 		}
 
 		pageUpdateFlag = true;
