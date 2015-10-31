@@ -43,3 +43,4 @@ gem 'yaml_db'
 gem 'whenever', :require => false
 gem 'httparty'
 gem 'websocket-rails'
+gem 'http_accept_language'

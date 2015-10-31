@@ -12,10 +12,16 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require tether.min.js
 //= require bootstrap
 //= require angular
+//= require moment.min.js
+//= require angular-moment.min.js
 //= require angular-app/app
 //= require_tree ./angular-app/controllers
 //= require_tree .
 //= require websocket_rails/main
 
+$(document).ready(function() {
+	$('[data-toggle="tooltip"]').tooltip();
+});

@@ -73,10 +73,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	var pageUpdateFlag = true;
 
 	$scope.$watchCollection('filteredCharacters', function() {
-		if($scope.filteredCharacters.length) {
-			$scope.setCurrentPage(1);
-			$('#loadingGif').hide();
-		}
+		$scope.setCurrentPage(1);
 
 		$('#ladderContent').scrollTop(0);
 	});
@@ -141,10 +138,28 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 			}
 		).success(function(data) {
 			$scope.characters = data;
+			$('#loadingGif').hide();
+		});
+	};
+
+	$scope.getRecent = function(region, bracket){
+		$('#loadingGif').show();
+		$http.get(
+			"/match_history/list",
+			{ 
+				params: {
+					region: region,
+					bracket: bracket
+				}
+			}
+		).success(function(data) {
+			$scope.characters = data;
+			$('#loadingGif').hide();
 		});
 	};
 
 	$scope.updateLowerLimits = function() {
+		console.log('updating lower limits');
 		pageUpdateFlag = false;
 		var curScrollHeight = $('#ladderContent').scrollTop();
 		if($scope.pagination.current > 1) {
@@ -155,14 +170,13 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		$scope.updateCurrentPage($scope.pagination.current + 1);
 		$scope.$apply();
 
-		if($scope.pagination.current < $scope.pagination.last) {
-			$('#ladderContent').scrollTop(curScrollHeight - $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage);
-		}
+		$('#ladderContent').scrollTop(curScrollHeight - $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage);
 
 		pageUpdateFlag = true;
 	};
 
 	$scope.updateUpperLimits = function() {
+		console.log('updating upper limits');
 		var curScrollHeight = $('#ladderContent').scrollTop();
 		pageUpdateFlag = false;
 		$scope.updateCurrentPage($scope.pagination.current - 1);

@@ -26,6 +26,26 @@
 		<li class="nav-item">
 			<a class="nav-link" href="">Teams</a>
 		</li>
+		<li class="nav-item dropdown pull-right">
+			<button class="btn btn-secondary dropdown-toggle" title="<%= current_region.name %>" type="button" data-toggle="dropdown">
+				<%= image_tag('icons/regions/' + current_region.abbr + '_icon.png', width: "30", alt: current_region.name) %>
+			</button>
+			<div class="dropdown-menu dropdown-menu-right text-center">
+				<% Region.where.not(id: current_region.id).each do |region| %>
+					<%= link_to(image_tag('icons/regions/' +  region.abbr + '_icon.png', width: "40"), {controller: "application", action: "set_region", region_id: region.id}, class: "dropdown-item", data: {toggle: "tooltip", placement: "left"}, title: region.name) %>
+				<% end %>
+			</div>
+		</li>
+		<li class="nav-item dropdown pull-right">
+			<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+				<%= current_bracket.name %>
+			</button>
+			<div class="dropdown-menu dropdown-menu-right text-center">
+				<% Bracket.where.not(id: current_bracket.id).each do |bracket| %>
+					<%= link_to bracket.name, {controller: "application", action: "set_bracket", bracket_id: bracket.id}, class: "dropdown-item" %>
+				<% end %>
+			</div>
+		</li>
 	</ul>
 </nav>
 
