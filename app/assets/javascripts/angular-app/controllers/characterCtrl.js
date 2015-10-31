@@ -66,33 +66,18 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 			container: '#ladderContent',
 			itemContainer: 'tr'
 		}
+
+		$(window).trigger('resize');
 	};
 
 	var pageUpdateFlag = true;
-
-	$scope.$watchCollection('classFilter', function() {
-		$scope.beginVar = 0;
-		$('#ladderContent').scrollTop(0);
-	});
 
 	$scope.$watchCollection('filteredCharacters', function() {
 		if($scope.filteredCharacters.length) {
 			$scope.setCurrentPage(1);
 			$('#loadingGif').hide();
-		} else {
-			$('#loadingGif').show();
 		}
-		console.log("characters size: " + $scope.filteredCharacters.length);
 
-		//$('#ladderContent').scrollTop(0);
-	});
-
-	$scope.$watchCollection('pages', function() {
-		$('#ladderContent').height($(window).height() - $('#ladderContent').offset().top);
-	});
-
-	$scope.$watch('query', function() {
-		$scope.beginVar = 0;
 		$('#ladderContent').scrollTop(0);
 	});
 
@@ -105,14 +90,6 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 			$scope.beginVar	= page * $scope.pagination.itemsPerPage - $scope.pagination.itemsPerPage * 2;
 			$('#ladderContent').scrollTop(48 * 51)
 		}
-
-		console.log('setting current page');
-		console.log("begin var: " + $scope.beginVar);
-		console.log("limit var: " + $scope.limitVar);
-		console.log("current var: " + $scope.pagination.current);
-		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
-		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
-		
 	};
 
 	$scope.updateCurrentPage = function(page) {
@@ -136,7 +113,6 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	}
 
 	$scope.customCharacterFilter = function (character) {
-	    // Display the wine if
 	    var re = new RegExp($scope.query, 'i');
 
 	    return ($scope.classFilter[character.character_class_id] || 
@@ -150,13 +126,11 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	            return false;
 	        }
 	    }
-
-	    // No checkbox was found to be checked
 	    return true;
 	}
 	
 	$scope.getLadder = function(region, bracket){
-
+		$('#loadingGif').show();
 		$http.get(
 			"/character/ladderJson",
 			{ 
@@ -171,55 +145,38 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	};
 
 	$scope.updateLowerLimits = function() {
-
-		var curScrollHeight = $('#ladderContent').scrollTop();
 		pageUpdateFlag = false;
-		console.log(parseInt($scope.pagination.current));
-		console.log('updating lower limits');
-		var current = $scope.pagination.current;
-		$scope.updateCurrentPage($scope.pagination.current + 1);
-		if(current > 1) {
+		var curScrollHeight = $('#ladderContent').scrollTop();
+		if($scope.pagination.current > 1) {
 			$scope.beginVar += 50;
 		} else {
-			curScrollHeight += $('#ladderContent')[0].scrollHeight / 3;
+			curScrollHeight += $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage;
 		}
+		$scope.updateCurrentPage($scope.pagination.current + 1);
 		$scope.$apply();
-		console.log("current var: " + $scope.pagination.current);
-		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
-		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
 
-		//STILL AN ISSUE WITH SCROLLING AT THE END OF THE LIST, BOTH UP AND DOWN
 		if($scope.pagination.current < $scope.pagination.last) {
-			$('#ladderContent').scrollTop(curScrollHeight - $('#ladderContent')[0].scrollHeight / 3);
+			$('#ladderContent').scrollTop(curScrollHeight - $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage);
 		}
 
-		console.log("Size of limit: " + $scope.limitVar);
 		pageUpdateFlag = true;
 	};
 
 	$scope.updateUpperLimits = function() {
 		var curScrollHeight = $('#ladderContent').scrollTop();
 		pageUpdateFlag = false;
-		console.log(parseInt($scope.pagination.current));
-		console.log('updating upper limits');
 		$scope.updateCurrentPage($scope.pagination.current - 1);
-		
 		if($scope.pagination.current > 1) {
 			$scope.beginVar -= 50;
 		}
-		console.log("begin var: " + $scope.beginVar);
-		console.log("limit var: " + $scope.limitVar);
-		console.log("current var: " + $scope.pagination.current);
-		console.log("scrolltop var: " + $('#ladderContent').scrollTop());
-		console.log("scrollheight var: " + $('#ladderContent')[0].scrollHeight);
 		$scope.$apply();
 		if($scope.pagination.current > 1) {
-			$('#ladderContent').scrollTop(curScrollHeight + $('#ladderContent')[0].scrollHeight / 3);
+			$('#ladderContent').scrollTop(curScrollHeight + $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage);
 		}
 
 		pageUpdateFlag = true;
 	};
-
+	
 	$('#ladderContent').scroll(function(){
 		var top = $('#ladderContent').scrollTop();
 		if($scope.pagination.current > 1 && pageUpdateFlag
@@ -228,7 +185,6 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	    } else if($scope.pagination.current == 1 
 	    	&& pageUpdateFlag
 	    	&& top > $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()){
-	        //console.log($($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage);
 	        $scope.updateLowerLimits();
 	    } else if(top > 2 * $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()
 	    	&& pageUpdateFlag) {
@@ -275,15 +231,12 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
             } 
             $scope.specFilter[$(this).data('id')] = false;
         }
-        console.log($scope.specFilter[$(this).data('id')]);
         $scope.$apply();
     });
 
 	$(window).resize(function() {
 	    $('#ladderContent').height($(window).height() - $('#ladderContent').offset().top);
 	});
-
-	$(window).trigger('resize');
 	
 	$scope.init();
 });

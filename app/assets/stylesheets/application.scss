@@ -72,3 +72,15 @@ body {
 	float: none;
 	margin: 0 auto;
 }
+
+.pagination {
+	li {
+		a {
+			&:focus {
+				outline: 0;
+				background-color: #FFF;
+				color: #0275D8;
+			}
+		}
+	}
+}
