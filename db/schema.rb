@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151024054451) do
+ActiveRecord::Schema.define(version: 20151031232037) do
 
   create_table "brackets", force: true do |t|
     t.string   "name"
     t.integer  "player_count"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "display_name"
   end
 
   create_table "character_classes", force: true do |t|
@@ -201,6 +202,7 @@ ActiveRecord::Schema.define(version: 20151024054451) do
     t.string   "abbr"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "domain"
   end
 
   create_table "spells", force: true do |t|

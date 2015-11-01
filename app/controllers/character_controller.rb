@@ -2,12 +2,9 @@ class CharacterController < ApplicationController
 
   def list
     @region = current_region
-    @bracket = Bracket.find_by_name(params[:bracket].downcase)
-    if(!@bracket)
-      return not_found
-    end
-
+    @bracket = current_bracket
     @classes = CharacterClass.all
+    
   end
 
   def recent

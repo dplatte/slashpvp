@@ -201,7 +201,8 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	    	&& top > $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()){
 	        $scope.updateLowerLimits();
 	    } else if(top > 2 * $($scope.pagination.container + ' ' + $scope.pagination.itemContainer).height() * $scope.pagination.itemsPerPage - $('#ladderContent').height()
-	    	&& pageUpdateFlag) {
+	    	&& pageUpdateFlag
+	    	&& $scope.pagination.current < $scope.pagination.last) {
 	    	$scope.updateLowerLimits();
 		} 
 	});

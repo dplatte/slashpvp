@@ -1,12 +1,8 @@
 Rails.application.routes.draw do
-  get 'api/get_character_classes'
-  get 'api/updateCharacterTalents'
   get '/:controller/:action'
   get '/api/ladder/:region/:bracket' => 'api#updateLadder'
-  get '/ladder/:region/:bracket' => 'character#list'
-  get '/ladder/:bracket' => 'character#list'
+  get '/ladder' => 'character#list'
   get '/recent/:bracket' => 'character#recent'
-  get '/setRegion/:region' => 'application#set_region'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

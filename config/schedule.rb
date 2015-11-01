@@ -15,7 +15,10 @@ set :output, "log/whenever.log"
 # end
 #
 every 1.minute do
+  runner "Character.updateLadder('us','2v2')"
   runner "Character.updateLadder('us','3v3')"
+  runner "Character.updateLadder('us','5v5')"
+  runner "Character.updateLadder('us','rbg')"
 end
 
 # Learn more: http://github.com/javan/whenever

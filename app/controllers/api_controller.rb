@@ -192,7 +192,7 @@ class ApiController < ApplicationController
     bracket = Bracket.find_by_name(params[:bracket].downcase)
     if(region && bracket)
       api_key = Rails.application.secrets.battlenet_api_key
-      resp = HTTParty.get('https://' + region.abbr + '.api.battle.net/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key)
+      resp = HTTParty.get(region.domain + 'wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key)
       if(resp.success?)
         response = JSON.parse(resp.body)['rows']
 
