@@ -15,6 +15,9 @@ body {
 		display:table;
 		width:100%;
 		table-layout:fixed;
+		th {
+			cursor:pointer;
+		}
 	}
 	tbody {
 		display:block;
@@ -30,6 +33,7 @@ body {
 			display:table;
 			width:100%;
 			table-layout:fixed;
+			cursor:pointer;
 		}
 	}
 }

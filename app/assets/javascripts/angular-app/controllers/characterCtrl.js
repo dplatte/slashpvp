@@ -7,6 +7,10 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		$scope.beginVar = 0;
 		$scope.limitStep = 50;
 		$scope.query = "";
+		$scope.sort = {
+			orderVar: '',
+			reverse: false
+		};
 		$scope.classFilter = {
 			1: false,
 			2: false,
@@ -126,16 +130,10 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	    return true;
 	}
 	
-	$scope.getLadder = function(region, bracket){
+	$scope.getLadder = function(){
 		$('#loadingGif').show();
 		$http.get(
-			"/character/ladderJson",
-			{ 
-				params: {
-					region: region,
-					bracket: bracket
-				}
-			}
+			"/character/ladderJson"
 		).success(function(data) {
 			$scope.characters = data;
 			$('#loadingGif').hide();
@@ -158,10 +156,36 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		});
 	};
 
+	$scope.getCharacterHistory = function(c_id) {
+		$('#loadingGif').show();
+		$http.get(
+			"/match_history/characterJson",
+			{ 
+				params: {
+					character_id: c_id
+				}
+			}
+		).success(function(data) {
+			$scope.characters = data;
+			$('#loadingGif').hide();
+		});
+	};
+
+	$scope.showCharacterHistory = function(id) {
+		window.location.href = '/characterHistory/' + id;
+	};
+
+	$scope.order = function(v) {
+		$scope.sort.reverse = ($scope.sort.orderVar === v) ? !$scope.sort.reverse : false;
+		$scope.sort.orderVar = v;
+	};
+
 	$scope.updateLowerLimits = function() {
 		console.log('updating lower limits');
 		pageUpdateFlag = false;
 		var curScrollHeight = $('#ladderContent').scrollTop();
+		console.log($scope.pagination);
+		console.log($scope.beginVar);
 		if($scope.pagination.current > 1) {
 			$scope.beginVar += 50;
 		} else {

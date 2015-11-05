@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151031232037) do
+ActiveRecord::Schema.define(version: 20151102002354) do
 
   create_table "brackets", force: true do |t|
     t.string   "name"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20151031232037) do
   add_index "characters", ["character_spec_id"], name: "index_characters_on_character_spec_id", using: :btree
   add_index "characters", ["faction_id"], name: "index_characters_on_faction_id", using: :btree
   add_index "characters", ["gender_id"], name: "index_characters_on_gender_id", using: :btree
+  add_index "characters", ["name", "realm_name", "bracket_id", "region_id"], name: "by_name_realm_bracket_region", unique: true, using: :btree
   add_index "characters", ["region_id"], name: "index_characters_on_region_id", using: :btree
 
   create_table "factions", force: true do |t|

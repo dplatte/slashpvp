@@ -1,4 +1,4 @@
-<body ng-app="app" ng-controller="CharacterCtrl" ng-init="getRecent('<%= @region.abbr %>', '<%= @bracket.name %>')">
+<body ng-app="app" ng-controller="CharacterCtrl" ng-init="getCharacterHistory('<%= params[:character_id] %>')">
 	<div class="container-fluid">
 	<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
 		<%= image_tag('kappa-loading.gif') %>
@@ -8,7 +8,7 @@
 				<div class="row m-y">
 					<div class="col-xs-12">
 						<div class="input-group">
-							<input type="text" ng-model="query" class="form-control" placeholder="Filter">
+							<input type="text" ng-model="query" class="form-control" placeholder="Search by Name">
 						</div>
 					</div>
 				</div>
@@ -43,38 +43,28 @@
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
-				<div class="row filterIcons">
-					<% @classes.each do |c| %>
-			    		<div class="col-xs-2 col-sm-1 col-md-3 col-md-offset-9 col-lg-2 col-lg-offset-10 p-x-0">
-			    			<!-- <div class="filterIconSpecs" hidden>
-					    		<% c.character_specs.each do |s| %>
-					    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
-					    		<% end %>
-					    	</div> -->
-				    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'filterClassIcon img-rounded', data: {id: c.id}) %>
-			    		</div>
-			    	<% end %>
-				</div>
+				
 			</div>
-		    <div class="col-xs-12 col-md-8 p-x-0" style="justify-content:center;">
-		    	
+		    <div class="col-xs-12 col-md-8 p-x-0">
 		    	<table class="table table-inverse table-hover">
 		    		<thead class="thead-inverse">
 		    			<tr>
-		    				<th style="min-width:50px;">Rank</th>
-		    				<th style="min-width:300px;">Name</th>
-		    				<th style="min-width:100px;">Old Rating</th>
-		    				<th style="min-width:100px;">New Rating</th>
-		    				<th>Last Seen</th>
+		    				<th>#</th>
+		    				<th>Old Rating</th>
+		    				<th>New Rating</th>
+		    				<th>Old Rank</th>
+		    				<th>New Rank</th>
+		    				<th>Date Played</th>
 		    			</tr>
 		    		</thead>
 		    		<tbody id="ladderContent">
 		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.victory ? 'table-success' : 'table-danger'">
-		    				<th  width="10%" scope="row">{{c.ranking}}</th>
-		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
-		    				<td width="15%">{{c.old_rating}}</td>
-		    				<td width="15%">{{c.new_rating}}</td>
-		    				<td >{{c.retrieved_time}}</td>
+		    				<th scope="row">{{$index + 1}}</th>
+		    				<td>{{c.old_rating}}</td>
+		    				<td>{{c.new_rating}}</td>
+		    				<td>{{c.old_ranking}}</td>
+		    				<td>{{c.new_ranking}}</td>
+		    				<td>{{c.retrieved_time | amDateFormat: 'MM/DD/YYYY hh:mm A'}}</td>
 		    			</tr>
 		    		</tbody>
 		    	</table>

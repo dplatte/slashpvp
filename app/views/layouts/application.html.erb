@@ -14,11 +14,11 @@
 <nav class="navbar navbar-light bg-faded">
 	<a class="navbar-brand" href="">/PvP</a>
 	<ul class="nav navbar-nav">
-		<li class="nav-item active">
+		<li class="nav-item">
 			<a class="nav-link" href="/">Home</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="/ladder/us/3v3">Ladder</a>
+			<a class="nav-link" href="/ladder">Ladder</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" href="">Stats</a>
@@ -38,11 +38,11 @@
 		</li>
 		<li class="nav-item dropdown pull-right">
 			<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
-				<%= current_bracket.name %>
+				<%= current_bracket.display_name %>
 			</button>
 			<div class="dropdown-menu dropdown-menu-right text-center">
 				<% Bracket.where.not(id: current_bracket.id).each do |bracket| %>
-					<%= link_to bracket.name, {controller: "application", action: "set_bracket", bracket_id: bracket.id}, class: "dropdown-item" %>
+					<%= link_to bracket.display_name, {controller: "application", action: "set_bracket", bracket_id: bracket.id}, class: "dropdown-item" %>
 				<% end %>
 			</div>
 		</li>

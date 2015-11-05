@@ -1,14 +1,15 @@
 Rails.application.routes.draw do
-  get '/:controller/:action'
   get '/api/ladder/:region/:bracket' => 'api#updateLadder'
   get '/ladder' => 'character#list'
-  get '/recent/:bracket' => 'character#recent'
+  get '/recent' => 'character#recent'
+  get '/characterHistory/:character_id' => 'match_history#character'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
   root 'character#recent'
+  get '/:controller/:action'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
