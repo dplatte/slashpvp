@@ -24,7 +24,16 @@ class CharacterController < ApplicationController
     bracket = current_bracket
     region = current_region
     characters = Character.joins(:match_histories).where('characters.bracket_id = ?, characters.region_id = ?, characters.ranking != ?, match_histories.retrieved_time > ?', bracket.id, region.id, nil, 1.hour.ago)
-    render :json => characters
+    
+    uniqueCharacters = Array.new
+
+    characters.each do |character|
+      if(!uniqueCharacters.include? character)
+        uniqueCharacters.push(character)
+      end
+    end
+
+    render :json => uniqueCharacters
     return true
   end
 
