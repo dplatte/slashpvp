@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   get '/ladder' => 'character#list'
   get '/recent' => 'character#recent'
   get '/characterHistory/:character_id' => 'match_history#character'
+  get '/calculator' => 'conquest_calc#calculator'
+  get '/stats' => 'stats#index'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

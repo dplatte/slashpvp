@@ -44,3 +44,5 @@ gem 'whenever', :require => false
 gem 'httparty'
 gem 'websocket-rails'
 gem 'http_accept_language'
+gem "google_visualr", ">= 2.5"
+gem 'font-awesome-rails'

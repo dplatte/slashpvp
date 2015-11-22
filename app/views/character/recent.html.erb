@@ -3,81 +3,84 @@
 	<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
 		<%= image_tag('kappa-loading.gif') %>
 	</div>
-		<div class="row">
-			<div class="col-xs-12 col-md-2">
-				<div class="row m-y">
-					<div class="col-xs-12">
-						<div class="input-group">
-							<input type="text" ng-model="query" class="form-control" placeholder="Filter">
-						</div>
-					</div>
-				</div>
-		    </div>
-		    <div class="hidden-sm-down col-md-8">
-		    	<nav class="text-center">
-		    		<ul class="pagination">
-					    <li ng-class="{ disabled : pagination.current == 1 }">
-					        <a href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
-					    </li>
-					    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
-					        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding">‹</a>
-					    </li>
-					    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled ng-scope">
-					        <a href="" class="ng-binding">...</a>
-					    </li>
-					    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
-					        <a href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
-					    </li>
-					    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope">
-					        <a href="" class="ng-binding">...</a>
-					    </li>
-					    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
-					        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding">›</a>
-					    </li>
-					    <li ng-class="{ disabled : pagination.current == pagination.last }">
-					        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
-					    </li>
-					</ul>
-				</nav>
+		<div class="row text-center m-t">
+			<div class="col-xs-12">
+				<h2><%= current_region.abbr.upcase %> <%= current_bracket.display_name %> Recent Activity</h2>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 col-md-2">
-				<div class="row filterIcons">
-					<% @classes.each do |c| %>
-			    		<div class="col-xs-2 col-sm-1 col-md-3 col-md-offset-9 col-lg-2 col-lg-offset-10 p-x-0">
-			    			<!-- <div class="filterIconSpecs" hidden>
-					    		<% c.character_specs.each do |s| %>
-					    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
-					    		<% end %>
-					    	</div> -->
-				    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'filterClassIcon img-rounded', data: {id: c.id}) %>
-			    		</div>
-			    	<% end %>
+			<div class="col-xs-12 col-lg-2">
+				<nav class="navbar navbar-light">
+						<div class="input-group nav-item">
+							<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
+								&#9776;
+							</button>
+							<input type="text" ng-model="query" class="form-control" placeholder="Search">
+						</div>
+				</nav>
+				<div class="collapse" id="exCollapsingNavbar">
+					<div class="row filterIcons">
+						<% @classes.each do |c| %>
+				    		<div class="col-xs-2 col-sm-1 col-md-3 p-x-0">
+				    			<!-- <div class="filterIconSpecs" hidden>
+						    		<% c.character_specs.each do |s| %>
+						    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
+						    		<% end %>
+						    	</div> -->
+					    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'filterClassIcon img-rounded', data: {id: c.id}) %>
+				    		</div>
+				    	<% end %>
+					</div>
 				</div>
-			</div>
-		    <div class="col-xs-12 col-md-8 p-x-0" style="justify-content:center;">
-		    	
-		    	<table class="table table-inverse table-hover">
-		    		<thead class="thead-inverse">
+		    </div>
+		    <div class="col-xs-12 col-lg-8 p-x-0" style="justify-content:center;">
+		    	<table class="table table-hover table-sm table-responsive">
+		    		<thead>
 		    			<tr>
-		    				<th style="min-width:50px;">Rank</th>
-		    				<th style="min-width:300px;">Name</th>
-		    				<th style="min-width:100px;">Old Rating</th>
-		    				<th style="min-width:100px;">New Rating</th>
-		    				<th>Last Seen</th>
+		    				<th width="50">#</th>
+		    				<th width="170">Name</th>
+		    				<th class="hidden-xs-down">Rating</th>
+		    				<th class="hidden-xs-down">+/-</th>
+		    				<th width="100" class="text-right">Time</th>
 		    			</tr>
 		    		</thead>
 		    		<tbody id="ladderContent">
-		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.victory ? 'table-success' : 'table-danger'">
-		    				<th  width="10%" scope="row">{{c.ranking}}</th>
-		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
-		    				<td width="15%">{{c.old_rating}}</td>
-		    				<td width="15%">{{c.new_rating}}</td>
-		    				<td >{{c.retrieved_time}}</td>
+		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.victory ? 'win' : 'loss'" ng-click="showCharacterHistory(c.character.id)">
+		    				<th width="50" scope="row">{{c.character.ranking}}</th>
+		    				<td width="170"><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character.character_race_id}}_{{c.character.gender_id}}.png' /> <img class="hidden-xs-down" width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character.character_spec_id}}.png' /> {{c.character.name}}</td>
+		    				<td class="hidden-xs-down">{{c.new_rating}}</td>
+		    				<td class="hidden-xs-down">{{c.victory ? '+' : '-'}}{{c.rating_change}}</td>
+		    				<td width="100" class="text-right" am-time-ago="c.retrieved_time"></td>
 		    			</tr>
 		    		</tbody>
 		    	</table>
+		    	<div id="pagination" class="hidden-sm-down col-md-12">
+			    	<nav class="text-center">
+			    		<ul class="pagination">
+						    <li ng-class="{ disabled : pagination.current == 1 }">
+						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
+						    </li>
+						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
+						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding">‹</a>
+						    </li>
+						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled ng-scope">
+						        <a href="" class="ng-binding">...</a>
+						    </li>
+						    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+						        <a href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
+						    </li>
+						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope">
+						        <a href="" class="ng-binding">...</a>
+						    </li>
+						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
+						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding">›</a>
+						    </li>
+						    <li ng-class="{ disabled : pagination.current == pagination.last }">
+						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
+						    </li>
+						</ul>
+					</nav>
+				</div>
 		    </div>
 	  </div>
 	</div>

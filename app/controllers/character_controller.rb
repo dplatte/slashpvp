@@ -23,18 +23,24 @@ class CharacterController < ApplicationController
   def recentJson
     bracket = current_bracket
     region = current_region
-    characters = Character.joins(:match_histories).where('characters.bracket_id = ?, characters.region_id = ?, characters.ranking != ?, match_histories.retrieved_time > ?', bracket.id, region.id, nil, 1.hour.ago)
+    #1.hour.ago
+    histories = MatchHistory.includes(:character).where('characters.bracket_id = ? and characters.region_id = ?', bracket.id, region.id).where.not('characters.ranking' => nil).references(:character).order('match_histories.retrieved_time DESC, characters.ranking ASC').limit(2000)
+    #characters = Character.joins(:match_histories).where().order('characters.ranking DESC, match_histories.retrieved_time ASC')
     
-    uniqueCharacters = Array.new
+    uniqueCharacterIds = Array.new
+    duplicateHistoryIds = Array.new
 
-    characters.each do |character|
-      if(!uniqueCharacters.include? character)
-        uniqueCharacters.push(character)
-      end
-    end
+    Rails.logger.info(histories[0])
+    # histories.each do |history|
+    #   if(!uniqueCharacterIds.include?(history.character.id))
+    #     uniqueCharacterIds.push(history.character.id)
+    #   else
+    #     histories = histories.reject{|h| h.id == history.id}
+    #   end
+    # end
 
-    render :json => uniqueCharacters
-    return true
+    render :json => histories.to_json(:include => :character)
+    #return true
   end
 
 end

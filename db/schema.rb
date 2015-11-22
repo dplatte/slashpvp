@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151102002354) do
+ActiveRecord::Schema.define(version: 20151117063508) do
 
   create_table "brackets", force: true do |t|
     t.string   "name"
@@ -163,6 +163,8 @@ ActiveRecord::Schema.define(version: 20151102002354) do
     t.integer  "old_ranking"
     t.integer  "new_ranking"
     t.datetime "retrieved_time"
+    t.integer  "season_wins"
+    t.integer  "season_losses"
   end
 
   add_index "match_histories", ["bracket_id"], name: "index_match_histories_on_bracket_id", using: :btree
@@ -206,6 +208,17 @@ ActiveRecord::Schema.define(version: 20151102002354) do
     t.string   "domain"
   end
 
+  create_table "roster_slots", force: true do |t|
+    t.integer  "team_id"
+    t.integer  "character_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "roster_slots", ["character_id"], name: "index_roster_slots_on_character_id", using: :btree
+  add_index "roster_slots", ["team_id", "character_id"], name: "index_roster_slots_on_team_id_and_character_id", unique: true, using: :btree
+  add_index "roster_slots", ["team_id"], name: "index_roster_slots_on_team_id", using: :btree
+
   create_table "spells", force: true do |t|
     t.string   "name"
     t.string   "icon"
@@ -231,5 +244,30 @@ ActiveRecord::Schema.define(version: 20151102002354) do
   add_index "talents", ["character_class_id"], name: "index_talents_on_character_class_id", using: :btree
   add_index "talents", ["character_spec_id"], name: "index_talents_on_character_spec_id", using: :btree
   add_index "talents", ["spell_id"], name: "index_talents_on_spell_id", using: :btree
+
+  create_table "teams", force: true do |t|
+    t.integer  "wins"
+    t.integer  "losses"
+    t.integer  "probability"
+    t.integer  "team_composition_id"
+    t.datetime "last_played"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "titles", force: true do |t|
+    t.string   "name"
+    t.decimal  "percentage",     precision: 10, scale: 0
+    t.integer  "rating"
+    t.integer  "ranking"
+    t.integer  "lowest_ranking"
+    t.integer  "bracket_id"
+    t.integer  "region_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "titles", ["bracket_id"], name: "index_titles_on_bracket_id", using: :btree
+  add_index "titles", ["region_id"], name: "index_titles_on_region_id", using: :btree
 
 end

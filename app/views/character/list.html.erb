@@ -3,9 +3,14 @@
 		<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
 			<%= image_tag('kappa-loading.gif') %>
 		</div>
+		<div class="row text-center m-t">
+			<div class="col-xs-12">
+				<h2><%= current_region.abbr.upcase %> <%= current_bracket.display_name %> Ladder</h2>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-xs-12 col-md-2">
-				<nav class="navbar navbar-light bg-faded m-y">
+				<nav class="navbar navbar-light">
 						<div class="input-group nav-item">
 							<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
 								&#9776;
@@ -16,7 +21,7 @@
 				<div class="collapse" id="exCollapsingNavbar">
 					<div class="row filterIcons">
 						<% @classes.each do |c| %>
-				    		<div class="col-xs-2 col-md-3 p-x-0">
+				    		<div class="col-xs-2 col-sm-1 col-md-3 p-x-0">
 				    			<!-- <div class="filterIconSpecs" hidden>
 						    		<% c.character_specs.each do |s| %>
 						    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
@@ -28,9 +33,27 @@
 					</div>
 				</div>
 		    </div>
-		    <div class="col-xs-12 col-md-10 p-x-0" style="justify-content:center;">
-		    	<div class="hidden-sm-down col-md-12">
-			    	<nav class="text-right">
+		    <div class="col-xs-12 col-md-8 p-x-0" style="justify-content:center;">
+		    	<table class="table table-sm table-hover">
+		    		<thead>
+		    			<tr>
+		    				<th ng-click="order('ranking')" width="50">#</th>
+		    				<th ng-click="order('name')">Name</th>
+		    				<th ng-click="order('realm_name')" class="hidden-xs-down">Realm</th>
+		    				<th ng-click="order('rating')" width="70">Rating</th>
+		    			</tr>
+		    		</thead>
+		    		<tbody id="ladderContent">
+		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | orderBy:sort.orderVar:sort.reverse | limitTo: limitVar : beginVar" class="" ng-click="showCharacterHistory(c.id)">
+		    				<th scope="row" width="50">{{c.ranking}}</th>
+		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
+		    				<td class="hidden-xs-down"><img width="20" height="20" ng-src='/assets/icons/factions/faction_{{c.faction_id}}.png' /> {{c.realm_name}}</td>
+		    				<td width="70" class="text-center">{{c.rating}}</td>
+		    			</tr>
+		    		</tbody>
+		    	</table>
+		    	<div id="pagination" class="hidden-sm-down col-md-12">
+			    	<nav class="text-center">
 			    		<ul class="pagination">
 						    <li ng-class="{ disabled : pagination.current == 1 }">
 						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
@@ -56,24 +79,6 @@
 						</ul>
 					</nav>
 				</div>
-		    	<table class="table table-inverse table-hover">
-		    		<thead class="thead-inverse">
-		    			<tr>
-		    				<th ng-click="order('ranking')">Rank</th>
-		    				<th ng-click="order('name')">Name</th>
-		    				<th ng-click="order('realm_name')">Realm</th>
-		    				<th ng-click="order('rating')">Rating</th>
-		    			</tr>
-		    		</thead>
-		    		<tbody id="ladderContent">
-		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | orderBy:sort.orderVar:sort.reverse | limitTo: limitVar : beginVar" ng-class="c.faction_id ? 'table-danger' : 'table-info'" ng-click="showCharacterHistory(c.id)">
-		    				<th scope="row">{{c.ranking}}</th>
-		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
-		    				<td><img width="20" height="20" ng-src='/assets/icons/factions/faction_{{c.faction_id}}.png' /> {{c.realm_name}}</td>
-		    				<td>{{c.rating}}</td>
-		    			</tr>
-		    		</tbody>
-		    	</table>
 		    </div>
 		</div>
 	</div>

@@ -1,0 +1,36 @@
+<body ng-app="app" ng-controller="ConquestCalcCtrl">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12 text-center m-t">
+	    		<h3>Weekly Conquest Point Calculator</h3>
+	    	</div>
+	    </div>
+		<form class="form-inline">
+			<div class="row m-t">
+				<div class="col-xs-12 text-center">
+					<div class="form-group">
+						<label for="rating">Rating</label>
+						<br />
+						<input class="form-control text-center" type="text" id="rating" ng-model="rating" />
+						<br class="hidden-xs-down" />
+						<small class="text-muted">Min: 1500</small>
+					</div>
+					<div class="form-group">
+						<label>&nbsp;</label>
+						<br />
+						<button type="button" class="btn btn-primary" ng-click="switchCalculation()" data-toggle="tooltip" data-placement="top" title="Switch"><i id="direction" class="fa fa-exchange"></i></button>
+						<br />
+						<small class="text-muted">&nbsp;</small>
+					</div>
+					<div class="form-group">
+						<label for="cap">Conquest Cap</label>
+						<br />
+						<input class="form-control text-center" type="text" id="cap" ng-model="cap" disabled="disabled" />
+						<br class="hidden-xs-down" />
+						<small class="text-muted">Min: 1700</small>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>

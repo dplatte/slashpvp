@@ -143,13 +143,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	$scope.getRecent = function(region, bracket){
 		$('#loadingGif').show();
 		$http.get(
-			"/match_history/list",
-			{ 
-				params: {
-					region: region,
-					bracket: bracket
-				}
-			}
+			"/character/recentJson", {}
 		).success(function(data) {
 			$scope.characters = data;
 			$('#loadingGif').hide();
@@ -157,6 +151,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	};
 
 	$scope.getCharacterHistory = function(c_id) {
+		console.log(c_id);
 		$('#loadingGif').show();
 		$http.get(
 			"/match_history/characterJson",
@@ -166,6 +161,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 				}
 			}
 		).success(function(data) {
+			console.log(data);
 			$scope.characters = data;
 			$('#loadingGif').hide();
 		});
@@ -274,7 +270,7 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
     });
 
 	$(window).resize(function() {
-	    $('#ladderContent').height($(window).height() - $('#ladderContent').offset().top);
+	    $('#ladderContent').height($(window).height() - $('#ladderContent').offset().top - $('#pagination').height());
 	});
 	
 	$scope.init();

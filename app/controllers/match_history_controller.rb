@@ -13,11 +13,12 @@ class MatchHistoryController < ApplicationController
   end
 
   def character
+    @character = Character.find_by_id(params[:character_id])
   end
 
   def characterJson
-    histories = MatchHistory.includes(:character).where(character_id: params[:character_id], region_id: current_region.id, bracket_id: current_bracket.id)
+    histories = MatchHistory.includes(:character).where(character_id: params[:character_id], region_id: current_region.id, bracket_id: current_bracket.id).order('match_histories.retrieved_time DESC')
   
-    render :json => histories
+    render :json => histories.to_json(:includes => :character)
   end
 end
