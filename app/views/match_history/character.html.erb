@@ -34,6 +34,9 @@
 		    				<td>{{c.victory ? '+' : '-'}}{{c.rating_change}}</td>
 		    				<td class="text-right">{{c.retrieved_time | amDateFormat: 'MM/DD/YYYY hh:mm A'}}</td>
 		    			</tr>
+		    			<tr ng-hide="characters.length">
+		    				<td colspan="5" class="text-center">No matches found for this bracket.</td>
+		    			</tr>
 		    		</tbody>
 		    	</table>
 		    	<div id="pagination" class="hidden-sm-down col-md-12">

@@ -13,19 +13,20 @@
 
 </head>
 <body>
-<nav class="navbar navbar-light bg-faded">
-	<a class="navbar-brand" href="/">/PvP</a>
-	<ul class="nav navbar-nav">
-		<li class="<% if current_page?('/ladder') %>active <% end %>nav-item">
-			<a class="nav-link" href="/ladder">Ladder</a>
+<nav class="row navbar navbar-light bg-faded">
+	<a class="col-xs-2 col-sm-2 navbar-brand" href="/">/PvP</a>
+	<ul class="col-xs-8 hidden-sm-up navbar-nav text-center">
+		<li class="nav-item dropdown">
+			<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+				<%= current_bracket.display_name %>
+			</button>
+			<div class="dropdown-menu dropdown-menu-right text-center">
+				<% Bracket.where.not(id: current_bracket.id).each do |bracket| %>
+					<%= link_to bracket.display_name, {controller: "application", action: "set_bracket", bracket_id: bracket.id}, class: "dropdown-item" %>
+				<% end %>
+			</div>
 		</li>
-		<li class="<% if current_page?('/stats') %>active <% end %>nav-item">
-			<a class="nav-link" href="/stats">Stats</a>
-		</li>
-		<li class="<% if current_page?('/calculator') %>active <% end %>nav-item">
-			<a class="nav-link" href="/calculator">Tools</a>
-		</li>
-		<li class="nav-item dropdown pull-right">
+		<li class="nav-item dropdown">
 			<button class="btn btn-secondary dropdown-toggle" title="<%= current_region.name %>" type="button" data-toggle="dropdown">
 				<%= image_tag('icons/regions/' + current_region.abbr + '_icon.png', width: "30", alt: current_region.name) %>
 			</button>
@@ -35,13 +36,45 @@
 				<% end %>
 			</div>
 		</li>
-		<li class="nav-item dropdown pull-right">
+	</ul>
+	<div class="col-xs-2 hidden-sm-up navbar-hamburger"><a>&#9776;</a></div>
+	<ul class="hidden-xs-down col-sm-8 navbar-nav text-center">
+		<li class="<% if current_page?('/ladder') %>active <% end %>nav-item center">
+			<a class="nav-link" href="/ladder"><span>Ladder</span></a>
+		</li>
+		<li class="<% if current_page?('/stats') %>active <% end %>nav-item center">
+			<a class="nav-link" href="/stats"><span>Stats</span></a>
+		</li>
+		<li class="<% if current_page?('/calculator') %>active <% end %>nav-item center dropdown">
+			<a class="nav-link dropdown-toggle" data-toggle="dropdown" ><span>Tools</span></a>
+		    <div class="dropdown-menu">
+		      <a class="dropdown-item" href="/calculator">Conquest Calculator</a>
+		      <a class="dropdown-item" href="#">Title Calculator</a>
+		      <a class="dropdown-item" href="#">Team Comp Names</a>
+		    </div>
+		</li>
+		<li class="<% if current_page?('/about') %>active <% end %>nav-item center">
+			<a class="nav-link" href="/about"><span>About</span></a>
+		</li>
+	</ul>
+	<ul class="col-xs-2 hidden-xs-down navbar-nav text-right text-center-xs">
+		<li class="nav-item dropdown">
 			<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
 				<%= current_bracket.display_name %>
 			</button>
 			<div class="dropdown-menu dropdown-menu-right text-center">
 				<% Bracket.where.not(id: current_bracket.id).each do |bracket| %>
 					<%= link_to bracket.display_name, {controller: "application", action: "set_bracket", bracket_id: bracket.id}, class: "dropdown-item" %>
+				<% end %>
+			</div>
+		</li>
+		<li class="nav-item dropdown">
+			<button class="btn btn-secondary dropdown-toggle" title="<%= current_region.name %>" type="button" data-toggle="dropdown">
+				<%= image_tag('icons/regions/' + current_region.abbr + '_icon.png', width: "30", alt: current_region.name) %>
+			</button>
+			<div class="dropdown-menu dropdown-menu-right text-center">
+				<% Region.where.not(id: current_region.id).each do |region| %>
+					<%= link_to(image_tag('icons/regions/' +  region.abbr + '_icon.png', width: "40"), {controller: "application", action: "set_region", region_id: region.id}, class: "dropdown-item", data: {toggle: "tooltip", placement: "left"}, title: region.name) %>
 				<% end %>
 			</div>
 		</li>

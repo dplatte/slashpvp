@@ -16,9 +16,9 @@ set :output, "log/whenever.log"
 #
 every 1.minute do
 	runner "Character.updateLadder('us','3v3')"
-	# runner "sleep 7; Character.updateLadder('us','2v2')"
-	# runner "sleep 14; Character.updateLadder('us','5v5')"
-	# runner "sleep 21; Character.updateLadder('us','rbg')"
+	runner "sleep 7; Character.updateLadder('us','2v2')"
+	runner "sleep 14; Character.updateLadder('us','5v5')"
+	runner "sleep 21; Character.updateLadder('us','rbg')"
 	# runner "sleep 28; Character.updateLadder('eu','3v3')"
 	# runner "sleep 35; Character.updateLadder('eu','2v2')"
 	# runner "sleep 42; Character.updateLadder('eu','5v5')"

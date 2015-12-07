@@ -80,13 +80,15 @@ ActiveRecord::Schema.define(version: 20151117063508) do
   add_index "characters", ["name", "realm_name", "bracket_id", "region_id"], name: "by_name_realm_bracket_region", unique: true, using: :btree
   add_index "characters", ["region_id"], name: "index_characters_on_region_id", using: :btree
 
-  create_table "factions", force: true do |t|
+  create_table "factions", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "genders", force: true do |t|
+  create_table "genders", id: false, force: true do |t|
+    t.integer  "id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -104,40 +106,6 @@ ActiveRecord::Schema.define(version: 20151117063508) do
   end
 
   add_index "glyphs", ["character_class_id"], name: "index_glyphs_on_character_class_id", using: :btree
-
-  create_table "ladder_rungs", force: true do |t|
-    t.integer  "ranking"
-    t.integer  "rating"
-    t.string   "name"
-    t.string   "realm_name"
-    t.integer  "race_id"
-    t.integer  "class_id"
-    t.integer  "spec_id"
-    t.integer  "faction_id"
-    t.integer  "gender_id"
-    t.integer  "season_wins"
-    t.integer  "season_losses"
-    t.integer  "weekly_wins"
-    t.integer  "weekly_losses"
-    t.integer  "region_id"
-    t.integer  "bracket_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "ladder_standings", force: true do |t|
-    t.integer  "rank"
-    t.integer  "rating"
-    t.integer  "bracket_id"
-    t.integer  "region_id"
-    t.integer  "character_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "ladder_standings", ["bracket_id"], name: "index_ladder_standings_on_bracket_id", using: :btree
-  add_index "ladder_standings", ["character_id"], name: "index_ladder_standings_on_character_id", using: :btree
-  add_index "ladder_standings", ["region_id"], name: "index_ladder_standings_on_region_id", using: :btree
 
   create_table "locales", force: true do |t|
     t.string   "name"
@@ -170,22 +138,6 @@ ActiveRecord::Schema.define(version: 20151117063508) do
   add_index "match_histories", ["bracket_id"], name: "index_match_histories_on_bracket_id", using: :btree
   add_index "match_histories", ["character_id"], name: "index_match_histories_on_character_id", using: :btree
   add_index "match_histories", ["region_id"], name: "index_match_histories_on_region_id", using: :btree
-
-  create_table "pvp_stats", force: true do |t|
-    t.integer  "ranking"
-    t.integer  "rating"
-    t.integer  "season_wins"
-    t.integer  "season_losses"
-    t.integer  "weekly_wins"
-    t.integer  "weekly_losses"
-    t.integer  "bracket_id"
-    t.integer  "character_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "pvp_stats", ["bracket_id"], name: "index_pvp_stats_on_bracket_id", using: :btree
-  add_index "pvp_stats", ["character_id"], name: "index_pvp_stats_on_character_id", using: :btree
 
   create_table "realms", force: true do |t|
     t.string   "name"

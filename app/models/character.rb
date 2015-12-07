@@ -33,33 +33,35 @@ class Character < ActiveRecord::Base
         losingHordeCharacterIds = Array.new
         
         Character.transaction do
-          response.each do |s|
-            #create and/or select character
-            character = Character.where(name: s['name'], realm_name: s['realmName'], bracket_id: bracket.id, region_id: region.id).first_or_initialize
+          MatchHistory.transaction do
+            response.each do |s|
+              #create and/or select character
+              character = Character.where(name: s['name'], realm_name: s['realmName'], bracket_id: bracket.id, region_id: region.id).first_or_initialize
 
-            next if character.season_wins != nil && (s['seasonWins'] < character.season_wins || s['seasonLosses'] < character.season_losses)
+              next if character.season_wins != nil && (s['seasonWins'] < character.season_wins || s['seasonLosses'] < character.season_losses)
 
-            #check for recent match
-            if(character.season_wins != nil && s['seasonWins'].to_i == character.season_wins + 1 && s['seasonLosses'].to_i == character.season_losses && character.ranking != nil)
-              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: true, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: s['rating'] - character.rating, rank_change: character.ranking - s['ranking'], retrieved_time: groupTime, season_wins: s['seasonWins'], season_losses: s['seasonLosses'])
-              if s['factionId'] == 0
-                winningAllianceCharacterIds.push(character.id)
-              else
-                winningHordeCharacterIds.push(character.id)
+              #check for recent match
+              if(character.season_wins != nil && s['seasonWins'].to_i == character.season_wins + 1 && s['seasonLosses'].to_i == character.season_losses && character.ranking != nil)
+                MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: true, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: s['rating'] - character.rating, rank_change: character.ranking - s['ranking'], retrieved_time: groupTime, season_wins: s['seasonWins'], season_losses: s['seasonLosses'])
+                if s['factionId'] == 0
+                  winningAllianceCharacterIds.push(character.id)
+                else
+                  winningHordeCharacterIds.push(character.id)
+                end
+              elsif (character.season_losses != nil && s['seasonLosses'].to_i == character.season_losses + 1 && s['seasonWins'].to_i == character.season_wins  && character.ranking != nil)
+                MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: false, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: character.rating - s['rating'], rank_change: s['ranking'] - character.ranking, retrieved_time: groupTime, season_wins: s['seasonWins'], season_losses: s['seasonLosses'])
+                if s['factionId'] == 0
+                  losingAllianceCharacterIds.push(character.id)
+                else
+                  losingHordeCharacterIds.push(character.id)
+                end
               end
-            elsif (character.season_losses != nil && s['seasonLosses'].to_i == character.season_losses + 1 && s['seasonWins'].to_i == character.season_wins  && character.ranking != nil)
-              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: false, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: character.rating - s['rating'], rank_change: s['ranking'] - character.ranking, retrieved_time: groupTime, season_wins: s['seasonWins'], season_losses: s['seasonLosses'])
-              if s['factionId'] == 0
-                losingAllianceCharacterIds.push(character.id)
-              else
-                losingHordeCharacterIds.push(character.id)
-              end
+
+              #update character
+              character.update_attributes(gender_id: s['genderId'], character_race_id: s['raceId'], character_class_id: s['classId'], character_spec_id: s['specId'], faction_id: s['factionId'], rating: s['rating'], ranking: s['ranking'], season_wins: s['seasonWins'], season_losses: s['seasonLosses'], weekly_wins: s['weeklyWins'], weekly_losses: s['weeklyLosses'])
+              unchangedCharacterIds.delete(character.id)
+
             end
-
-            #update character
-            character.update_attributes(gender_id: s['genderId'], character_race_id: s['raceId'], character_class_id: s['classId'], character_spec_id: s['specId'], faction_id: s['factionId'], rating: s['rating'], ranking: s['ranking'], season_wins: s['seasonWins'], season_losses: s['seasonLosses'], weekly_wins: s['weeklyWins'], weekly_losses: s['weeklyLosses'])
-            unchangedCharacterIds.delete(character.id)
-
           end
         end
 

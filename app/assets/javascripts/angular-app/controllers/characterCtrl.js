@@ -78,7 +78,6 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 
 	$scope.$watchCollection('filteredCharacters', function() {
 		$scope.setCurrentPage(1);
-
 		$('#ladderContent').scrollTop(0);
 	});
 
@@ -113,6 +112,14 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 		$scope.pagination.current = page;
 	}
 
+	$scope.customRecentCharacterFilter = function (c) {
+	    var re = new RegExp($scope.query, 'i');
+
+	    return ($scope.classFilter[c.character.character_class_id] || 
+	    	noFilter($scope.classFilter)) &&
+	    	re.test(c.character.name);
+	};
+
 	$scope.customCharacterFilter = function (character) {
 	    var re = new RegExp($scope.query, 'i');
 
@@ -131,39 +138,34 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	}
 	
 	$scope.getLadder = function(){
-		$('#loadingGif').show();
 		$http.get(
 			"/character/ladderJson"
 		).success(function(data) {
 			$scope.characters = data;
-			$('#loadingGif').hide();
 		});
+
 	};
 
 	$scope.getRecent = function(region, bracket){
-		$('#loadingGif').show();
 		$http.get(
 			"/character/recentJson", {}
 		).success(function(data) {
 			$scope.characters = data;
-			$('#loadingGif').hide();
 		});
+		$timeout(function() {
+			$scope.getRecent(region, bracket);
+		}, 10000);
 	};
 
 	$scope.getCharacterHistory = function(c_id) {
-		console.log(c_id);
-		$('#loadingGif').show();
 		$http.get(
-			"/match_history/characterJson",
-			{ 
+			"/match_history/characterJson", { 
 				params: {
 					character_id: c_id
 				}
 			}
 		).success(function(data) {
-			console.log(data);
 			$scope.characters = data;
-			$('#loadingGif').hide();
 		});
 	};
 
@@ -230,22 +232,14 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	$('.filterClassIcon').on('click', function(){
         if(!$(this).is('.checked')){
             $(this).addClass('checked');
-            //$(this).siblings('.filterIconSpecs').animate({right:0}, 'slow');
-            //$(this).siblings('.filterIconSpecs').children().each(function() {
-            	$scope.classFilter[$(this).data('id')] = true;
-            	//if(!$(this).is('.checked')) {
-            	//	$(this).addClass('checked');
-            	//}
-            //});
+            $scope.classFilter[$(this).data('id')] = true;
+            $('#filterIcon').css('color', '#3498DB');
         } else {
             $(this).removeClass('checked');
-            //$(this).siblings('.filterIconSpecs').animate({right:-200}, 'slow');
-            //$(this).siblings('.filterIconSpecs').children().each(function() {
-            	$scope.classFilter[$(this).data('id')] = false;
-            	//if($(this).is('.checked')) {
-            	//	$(this).removeClass('checked');
-            	//}
-            //});
+            $scope.classFilter[$(this).data('id')] = false;
+            if($('.filterClassIcon.checked').length == 0) {
+            	$('#filterIcon').css('color', '')
+            }
         }
         $scope.$apply();
     });

@@ -1,43 +1,37 @@
 <body ng-app="app" ng-controller="CharacterCtrl" ng-init="getLadder()">
 	<div class="container-fluid">
 		<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
-			<%= image_tag('kappa-loading.gif') %>
+			<!--<%= image_tag('kappa-loading.gif') %>-->
 		</div>
-		<div class="row text-center m-t">
-			<div class="col-xs-12">
+		<div class="row m-t">
+			<div class="col-xs-12 col-md-offset-2 col-md-5 text-center-xs p-x-0">
 				<h2><%= current_region.abbr.upcase %> <%= current_bracket.display_name %> Ladder</h2>
+			</div>
+			<div class="col-xs-12 col-md-3 p-x-0">
+				<nav class="navbar navbar-light navbar-filter">
+					<div class="input-group nav-item">
+							<button class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" type="button">
+								<i id="filterIcon" class="fa fa-filter"></i> Filter
+							</button>
+						<div class="dropdown-menu filterIcons">
+							<% @classes.each do |c| %>
+					    		<a href="" class="dropdown-item filterClassIcon" data-id="<%= c.id %>">
+							    	<%= c.name %>
+						    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'img-rounded', width: '32', height: '32') %>
+					    		</a>
+					    	<% end %>
+						</div>
+						<input type="text" ng-model="query" class="form-control" placeholder="Search">
+					</div>
+				</nav>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-xs-12 col-md-2">
-				<nav class="navbar navbar-light">
-						<div class="input-group nav-item">
-							<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#exCollapsingNavbar">
-								&#9776;
-							</button>
-							<input type="text" ng-model="query" class="form-control" placeholder="Search">
-						</div>
-				</nav>
-				<div class="collapse" id="exCollapsingNavbar">
-					<div class="row filterIcons">
-						<% @classes.each do |c| %>
-				    		<div class="col-xs-2 col-sm-1 col-md-3 p-x-0">
-				    			<!-- <div class="filterIconSpecs" hidden>
-						    		<% c.character_specs.each do |s| %>
-						    			<%= image_tag('icons/specs/spec_' + s.id.to_s, size: "30", class: 'filterSpecIcon img-rounded', data: {id: s.id}) %>
-						    		<% end %>
-						    	</div> -->
-					    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'filterClassIcon img-rounded', data: {id: c.id}) %>
-				    		</div>
-				    	<% end %>
-					</div>
-				</div>
-		    </div>
-		    <div class="col-xs-12 col-md-8 p-x-0" style="justify-content:center;">
+		    <div class="col-xs-12 col-md-offset-2 col-md-8 p-x-0" style="justify-content:center;">
 		    	<table class="table table-sm table-hover">
 		    		<thead>
 		    			<tr>
-		    				<th ng-click="order('ranking')" width="50">#</th>
+		    				<th ng-click="order('ranking')" width="40">#</th>
 		    				<th ng-click="order('name')">Name</th>
 		    				<th ng-click="order('realm_name')" class="hidden-xs-down">Realm</th>
 		    				<th ng-click="order('rating')" width="70">Rating</th>
@@ -45,7 +39,7 @@
 		    		</thead>
 		    		<tbody id="ladderContent">
 		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | orderBy:sort.orderVar:sort.reverse | limitTo: limitVar : beginVar" class="" ng-click="showCharacterHistory(c.id)">
-		    				<th scope="row" width="50">{{c.ranking}}</th>
+		    				<th scope="row" width="40">{{c.ranking}}</th>
 		    				<td><img width="20" height="20" ng-src='/assets/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/classes/class_{{c.character_class_id}}.png' /> <img width="20" height="20" ng-src='/assets/icons/specs/spec_{{c.character_spec_id}}.png' /> {{c.name}}</td>
 		    				<td class="hidden-xs-down"><img width="20" height="20" ng-src='/assets/icons/factions/faction_{{c.faction_id}}.png' /> {{c.realm_name}}</td>
 		    				<td width="70" class="text-center">{{c.rating}}</td>
