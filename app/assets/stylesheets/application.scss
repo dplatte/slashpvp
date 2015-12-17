@@ -6,90 +6,6 @@ $enable-flex: true;
 
 @import "bootstrap";
 
-/* Responsive Text Alignement */
-
-.text-left-not-xs, .text-left-not-sm, .text-left-not-md, .text-left-not-lg {
-    text-align: left;
-}
-.text-center-not-xs, .text-center-not-sm, .text-center-not-md, .text-center-not-lg {
-    text-align: center;
-}
-.text-right-not-xs, .text-right-not-sm, .text-right-not-md, .text-right-not-lg {
-    text-align: right;
-}
-.text-justify-not-xs, .text-justify-not-sm, .text-justify-not-md, .text-justify-not-lg {
-    text-align: justify;
-}
-
-@media (max-width: 767px) {
-    .text-left-not-xs, .text-center-not-xs, .text-right-not-xs, .text-justify-not-xs {
-        text-align: inherit;
-    }
-    .text-left-xs {
-        text-align: left;
-    }
-    .text-center-xs {
-        text-align: center;
-    }
-    .text-right-xs {
-        text-align: right;
-    }
-    .text-justify-xs {
-        text-align: justify;
-    }
-}
-@media (min-width: 768px) and (max-width: 991px) {
-    .text-left-not-sm, .text-center-not-sm, .text-right-not-sm, .text-justify-not-sm {
-        text-align: inherit;
-    }
-    .text-left-sm {
-        text-align: left;
-    }
-    .text-center-sm {
-        text-align: center;
-    }
-    .text-right-sm {
-        text-align: right;
-    }
-    .text-justify-sm {
-        text-align: justify;
-    }
-}
-@media (min-width: 992px) and (max-width: 1199px) {
-    .text-left-not-md, .text-center-not-md, .text-right-not-md, .text-justify-not-md {
-        text-align: inherit;
-    }
-    .text-left-md {
-        text-align: left;
-    }
-    .text-center-md {
-        text-align: center;
-    }
-    .text-right-md {
-        text-align: right;
-    }
-    .text-justify-md {
-        text-align: justify;
-    }
-}
-@media (min-width: 1200px) {
-    .text-left-not-lg, .text-center-not-lg, .text-right-not-lg, .text-justify-not-lg {
-        text-align: inherit;
-    }
-    .text-left-lg {
-        text-align: left;
-    }
-    .text-center-lg {
-        text-align: center;
-    }
-    .text-right-lg {
-        text-align: right;
-    }
-    .text-justify-lg {
-        text-align: justify;
-    }
-}
-
 /* Site Wide */
 
 html {
@@ -106,7 +22,7 @@ h1, h2, h3, h4, h5, h6, p, div, nav, .btn {
     color: #2C3E50;
 }
 
-a:focus, a:active, a:visited, .btn:focus, .btn.focus, .btn:active:focus, .btn:active.focus, .btn.active:focus, .btn.active.focus, :focus {
+a:focus, a:active, a:hover, a:visited, .btn:focus, .btn.focus, .btn:active:focus, .btn:active.focus, .btn.active:focus, .btn.active.focus, :focus {
 	outline:0;
 	text-decoration:none;
 }
@@ -341,8 +257,8 @@ nav.bg-faded {
 .pagination {
 
 	margin:0;
-	li {
-		a {
+	.page-item {
+		.page-link {
 			color:#2C3E50;
 			border:none;
 			background-color:#ECF0F1;
@@ -356,13 +272,15 @@ nav.bg-faded {
 			}
 		}
 	}
-	li.disabled {
-		a, a:hover, a:focus {
+	.page-item.disabled {
+		.page-link, .page-link:hover, .page-link:focus {
 			background-color: #ECF0F1;
+			text-decoration:none;
 		}
 	}
-	li.active {
-		a {
+	.page-item.active {
+		.page-link {
+			color:#ECF0F1;
 			background-color:#2C3E50;
 			&:focus, &:hover {
 				background-color: #2C3E50;

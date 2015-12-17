@@ -3,7 +3,7 @@
 		<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
 			<%= image_tag('kappa-loading.gif') %>
 		</div>
-		<div class="row m-t">
+		<div class="row m-t-1">
 			<div class="col-xs-12 col-md-offset-2 col-md-5 text-center-xs p-x-0">
 				<h2><%= current_region.abbr.upcase %> <%= current_bracket.display_name %> Recent Activity</h2>
 			</div>
@@ -35,7 +35,7 @@
 		    				<th width="200" class="hidden-xs-down">Realm</th>
 		    				<th class="">Rating</th>
 		    				<th class="hidden-xs-down">+/-</th>
-		    				<th width="150" class="text-right">Time</th>
+		    				<th width="150" class="text-xs-right">Time</th>
 		    			</tr>
 		    		</thead>
 		    		<tbody id="ladderContent">
@@ -49,28 +49,28 @@
 		    		</tbody>
 		    	</table>
 		    	<div id="pagination" class="hidden-sm-down col-md-12">
-			    	<nav class="text-center">
+			    	<nav class="text-xs-center">
 			    		<ul class="pagination">
-						    <li ng-class="{ disabled : pagination.current == 1 }">
-						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
+						    <li class="page-item" ng-class="{ disabled : pagination.current == 1 }">
+						        <a class="page-link" href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
 						    </li>
-						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
-						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding">‹</a>
+						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope page-item">
+						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding page-link">‹</a>
 						    </li>
-						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled ng-scope">
-						        <a href="" class="ng-binding">...</a>
+						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled page-item ng-scope">
+						        <a href="" class="ng-binding page-link">...</a>
 						    </li>
-						    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
-						        <a href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
+						    <li class="page-item" ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+						        <a class="page-link" href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
 						    </li>
-						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope">
-						        <a href="" class="ng-binding">...</a>
+						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope page-item">
+						        <a href="" class="ng-binding page-link">...</a>
 						    </li>
-						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
-						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding">›</a>
+						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope page-item">
+						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding page-link">›</a>
 						    </li>
-						    <li ng-class="{ disabled : pagination.current == pagination.last }">
-						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
+						    <li class="page-item" ng-class="{ disabled : pagination.current == pagination.last }">
+						        <a class="page-link" href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
 						    </li>
 						</ul>
 					</nav>

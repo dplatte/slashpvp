@@ -6,12 +6,12 @@
 }
 </style>
 <div class="container-fluid">
-	<div class="row text-center m-t">
+	<div class="row text-xs-center m-t-1">
 		<div class="col-xs-12">
 			<h3>Statistics for the <%= current_region.abbr.upcase %> <%= current_bracket.display_name %> Bracket</h3>
 		</div>
 	</div>
-	<div class="row text-center m-t">
+	<div class="row text-xs-center m-t">
 		<div class="col-xs-12 col-md-6">
 			<h4>Races</h4>
 			<div id='raceChart' class="chart"></div>
@@ -23,7 +23,7 @@
   			<%= render_chart(@class_chart, 'classChart') %>
   		</div>
   	</div>
-  	<div class="row text-center m-t">
+  	<div class="row text-xs-center m-t">
   		<div class="col-xs-12 col-md-6">
   			<h4>Factions</h4>
   			<div id='factionChart' class="chart"></div>

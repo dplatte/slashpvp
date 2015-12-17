@@ -38,7 +38,7 @@
 		</li>
 	</ul>
 	<div class="col-xs-2 hidden-sm-up navbar-hamburger"><a>&#9776;</a></div>
-	<ul class="hidden-xs-down col-sm-8 navbar-nav text-center">
+	<ul class="hidden-xs-down col-sm-8 navbar-nav text-xs-center">
 		<li class="<% if current_page?('/ladder') %>active <% end %>nav-item center">
 			<a class="nav-link" href="/ladder"><span>Ladder</span></a>
 		</li>
@@ -54,10 +54,10 @@
 		    </div>
 		</li>
 		<li class="<% if current_page?('/about') %>active <% end %>nav-item center">
-			<a class="nav-link" href="/about"><span>About</span></a>
+			<a class="nav-link" href="#"><span>About</span></a>
 		</li>
 	</ul>
-	<ul class="col-xs-2 hidden-xs-down navbar-nav text-right text-center-xs">
+	<ul class="col-xs-2 hidden-xs-down navbar-nav text-sm-right text-xs-center">
 		<li class="nav-item dropdown">
 			<button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown">
 				<%= current_bracket.display_name %>

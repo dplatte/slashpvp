@@ -27,7 +27,7 @@ gem 'jbuilder', '~> 2.0'
 # gem 'unicorn'
 
 gem 'sprockets-rails', :require => 'sprockets/railtie'
-gem 'bootstrap', :git => 'https://github.com/twbs/bootstrap-rubygem'
+gem 'bootstrap', '~> 4.0.0.alpha3'
 gem 'angularjs-rails'
 gem 'yaml_db'
 gem 'whenever', :require => false

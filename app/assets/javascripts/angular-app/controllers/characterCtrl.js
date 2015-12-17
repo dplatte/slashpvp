@@ -1,4 +1,4 @@
-angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeout) {
+angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
 	
 	$scope.init = function() {
 		$scope.characters = [];
@@ -268,4 +268,4 @@ angular.module('app').controller('CharacterCtrl', function($scope, $http, $timeo
 	});
 	
 	$scope.init();
-});
+}]);
