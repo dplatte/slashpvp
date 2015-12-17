@@ -18,7 +18,7 @@ class Character < ActiveRecord::Base
     bracket = Bracket.find_by_name(b.downcase)
 
     if(region && bracket)
-      api_key = Rails.application.secrets.battlenet_api_key
+      api_key = ENV["BATTLE_NET_API_KEY"]
       resp = HTTParty.get(region.domain + '/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key, timeout: 30)
       if(resp.success?)
         response = JSON.parse(resp.body)['rows']

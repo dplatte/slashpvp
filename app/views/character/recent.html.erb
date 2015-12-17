@@ -17,7 +17,7 @@
 							<% @classes.each do |c| %>
 					    		<a href="" class="dropdown-item filterClassIcon" data-id="<%= c.id %>">
 							    	<%= c.name %>
-						    		<%= image_tag('icons/classes/class_' + c.id.to_s, class: 'img-rounded', width: '32', height: '32') %>
+						    		<%= image_tag('icons/classes/class_' + c.id.to_s + '.png', class: 'img-rounded', width: '32', height: '32') %>
 					    		</a>
 					    	<% end %>
 						</div>
