@@ -26,10 +26,6 @@ gem 'jbuilder', '~> 2.0'
 # Use unicorn as the app server
 # gem 'unicorn'
 
-# Use Capistrano for deployment
-gem 'capistrano-rails', group: :development
-gem 'capistrano-passenger'
-
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'bootstrap', :git => 'https://github.com/twbs/bootstrap-rubygem'
 gem 'angularjs-rails'
@@ -39,4 +35,13 @@ gem 'httparty'
 gem 'http_accept_language'
 gem "google_visualr", ">= 2.5"
 gem 'font-awesome-rails'
-gem 'passenger'
+
+gem 'figaro'
+gem 'puma'
+group :development do
+  gem 'capistrano'
+  gem 'capistrano3-puma'
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rvm'
+end
