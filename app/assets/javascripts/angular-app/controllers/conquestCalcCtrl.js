@@ -1,4 +1,4 @@
-angular.module('app').controller('ConquestCalcCtrl', function($scope) {
+angular.module('app').controller('ConquestCalcCtrl', ['$scope', function($scope) {
 
 	$scope.init = function() {
 		$scope.rating = 1500;
@@ -55,4 +55,4 @@ angular.module('app').controller('ConquestCalcCtrl', function($scope) {
 
 	$scope.init();
 
-});
+}]);

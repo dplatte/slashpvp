@@ -6,6 +6,7 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		$scope.limitVar = 150;
 		$scope.beginVar = 0;
 		$scope.limitStep = 50;
+		$scope.loading = false;
 		$scope.query = "";
 		$scope.sort = {
 			orderVar: '',
@@ -138,19 +139,23 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	}
 	
 	$scope.getLadder = function(){
+		$scope.loading = true;
 		$http.get(
 			"/character/ladderJson"
 		).success(function(data) {
 			$scope.characters = data;
+			$scope.loading = false;
 		});
 
 	};
 
 	$scope.getRecent = function(region, bracket){
+		$scope.loading = true;
 		$http.get(
 			"/character/recentJson", {}
 		).success(function(data) {
 			$scope.characters = data;
+			$scope.loading = false;
 		});
 		$timeout(function() {
 			$scope.getRecent(region, bracket);
@@ -158,6 +163,7 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	};
 
 	$scope.getCharacterHistory = function(c_id) {
+		$scope.loading = true;
 		$http.get(
 			"/match_history/characterJson", { 
 				params: {
@@ -166,6 +172,7 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 			}
 		).success(function(data) {
 			$scope.characters = data;
+			$scope.loading = false;
 		});
 	};
 
@@ -179,11 +186,8 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	};
 
 	$scope.updateLowerLimits = function() {
-		console.log('updating lower limits');
 		pageUpdateFlag = false;
 		var curScrollHeight = $('#ladderContent').scrollTop();
-		console.log($scope.pagination);
-		console.log($scope.beginVar);
 		if($scope.pagination.current > 1) {
 			$scope.beginVar += 50;
 		} else {
@@ -198,7 +202,6 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	};
 
 	$scope.updateUpperLimits = function() {
-		console.log('updating upper limits');
 		var curScrollHeight = $('#ladderContent').scrollTop();
 		pageUpdateFlag = false;
 		$scope.updateCurrentPage($scope.pagination.current - 1);

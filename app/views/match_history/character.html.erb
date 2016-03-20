@@ -3,7 +3,7 @@
 	<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
 		<%= image_tag('kappa-loading.gif') %>
 	</div>
-		<div class="row m-t text-center">
+		<div class="row m-t-1 text-xs-center">
 			<div class="col-xs-12">
 				<h2><%= current_bracket.display_name %> Match History</h2>
 			</div>
@@ -14,7 +14,7 @@
 			    	<div class="col-md-6 col-xs-12 text-center-xs text-left-not-xs">
 			    		<h3><%= image_tag('icons/races/race_' + @character.character_race_id.to_s + '_' + @character.gender_id.to_s + '.png', width:32, height:32) %> <%= image_tag('icons/classes/class_' + @character.character_class_id.to_s + '.png', width:32, height:32) %> <%= image_tag('icons/specs/spec_' + @character.character_spec_id.to_s + '.png', width:32, height:32) %> <%= @character.name %></h3>
 			    	</div>
-			    	<div class="col-md-6 col-xs-12 text-center-xs text-right-not-xs">
+			    	<div class="col-md-6 col-xs-12 text-xs-center text-sm-right">
 			    		<h3><%= image_tag('icons/factions/faction_' + @character.faction_id.to_s + '.png', width:32, height:32) %> <%= @character.realm_name %></h3>
 			    	</div>
 		    	</div>
@@ -34,34 +34,34 @@
 		    				<td>{{c.victory ? '+' : '-'}}{{c.rating_change}}</td>
 		    				<td class="text-right">{{c.retrieved_time | amDateFormat: 'MM/DD/YYYY hh:mm A'}}</td>
 		    			</tr>
-		    			<tr ng-hide="characters.length">
-		    				<td colspan="5" class="text-center">No matches found for this bracket.</td>
+		    			<tr ng-hide="loading || characters.length">
+		    				<td colspan="5" class="text-xs-center">No matches found for this bracket.</td>
 		    			</tr>
 		    		</tbody>
 		    	</table>
 		    	<div id="pagination" class="hidden-sm-down col-md-12">
-			    	<nav class="text-center">
+			    	<nav class="text-xs-center">
 			    		<ul class="pagination">
-						    <li ng-class="{ disabled : pagination.current == 1 }">
-						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
+						    <li class="page-item" ng-class="{ disabled : pagination.current == 1 }">
+						        <a class="page-link" href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
 						    </li>
-						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope">
-						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding">‹</a>
+						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope page-item">
+						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding page-link">‹</a>
 						    </li>
-						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled ng-scope">
-						        <a href="" class="ng-binding">...</a>
+						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled page-item ng-scope">
+						        <a href="" class="ng-binding page-link">...</a>
 						    </li>
-						    <li ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
-						        <a href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
+						    <li class="page-item" ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+						        <a class="page-link" href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
 						    </li>
-						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope">
-						        <a href="" class="ng-binding">...</a>
+						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope page-item">
+						        <a href="" class="ng-binding page-link">...</a>
 						    </li>
-						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope">
-						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding">›</a>
+						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope page-item">
+						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding page-link">›</a>
 						    </li>
-						    <li ng-class="{ disabled : pagination.current == pagination.last }">
-						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
+						    <li class="page-item" ng-class="{ disabled : pagination.current == pagination.last }">
+						        <a class="page-link" href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
 						    </li>
 						</ul>
 					</nav>
