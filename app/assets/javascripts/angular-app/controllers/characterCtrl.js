@@ -3,6 +3,11 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	$scope.init = function() {
 		$scope.characters = [];
 		$scope.filteredCharacters = [];
+		$scope.filteredRecentCharacters = [];
+		$scope.factions = [];
+		$scope.races = [];
+		$scope.specs = {};
+		$scope.classes = [];
 		$scope.limitVar = 150;
 		$scope.beginVar = 0;
 		$scope.limitStep = 50;
@@ -143,10 +148,16 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		$http.get(
 			"/character/ladderJson"
 		).success(function(data) {
-			$scope.characters = data;
+			$scope.characters = data.characters;
+			$scope.races = data.races;
+			$scope.classes = data.classes;
+			$scope.factions = data.factions;
 			$scope.loading = false;
-		});
 
+			$.each(data.specs, function(key, value) {
+				$scope.specs[value.id] = value;
+			});
+		});
 	};
 
 	$scope.getRecent = function(region, bracket){
@@ -154,12 +165,19 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		$http.get(
 			"/character/recentJson", {}
 		).success(function(data) {
-			$scope.characters = data;
+			$scope.characters = JSON.parse(data.characters);
+			$scope.races = data.races;
+			$scope.classes = data.classes;
+			$scope.factions = data.factions;
 			$scope.loading = false;
+
+			$.each(data.specs, function(key, value) {
+				$scope.specs[value.id] = value;
+			});
 		});
 		$timeout(function() {
 			$scope.getRecent(region, bracket);
-		}, 10000);
+		}, 30000);
 	};
 
 	$scope.getCharacterHistory = function(c_id) {
@@ -271,4 +289,17 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	});
 	
 	$scope.init();
-}]);
+}]).directive('tooltip', function(){
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            $(element).hover(function(){
+                // on mouseenter
+                $(element).tooltip('show');
+            }, function(){
+                // on mouseleave
+                $(element).tooltip('hide');
+            });
+        }
+    };
+});

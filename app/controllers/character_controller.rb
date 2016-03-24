@@ -17,7 +17,21 @@ class CharacterController < ApplicationController
     bracket = current_bracket
     region = current_region
   	characters = Character.where(bracket_id: bracket.id, region_id: region.id).where.not(ranking: nil).order('ranking').all
-  	render :json => characters
+    races = CharacterRace.all
+    specs = CharacterSpec.all
+    classes = CharacterClass.all
+    factions = Faction.all
+
+    factionsArray = []
+    factions.each do |faction|
+      factionsArray.push(faction.name.capitalize)
+    end
+
+    response = {characters: characters, races: races, specs: specs, classes: classes, factions: factionsArray}
+  	
+    render :json => response
+
+
   end
 
   def recentJson
@@ -39,7 +53,19 @@ class CharacterController < ApplicationController
       end
     end
 
-    render :json => histories.to_json(:include => :character)
+    races = CharacterRace.all
+    specs = CharacterSpec.all
+    classes = CharacterClass.all
+    factions = Faction.all
+
+    factionsArray = []
+    factions.each do |faction|
+      factionsArray.push(faction.name.capitalize)
+    end
+
+    response = {characters: histories.to_json(:include => :character), races: races, specs: specs, classes: classes, factions: factionsArray}
+
+    render :json => response
     #return true
   end
 

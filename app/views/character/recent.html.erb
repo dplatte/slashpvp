@@ -39,48 +39,24 @@
 		    			</tr>
 		    		</thead>
 		    		<tbody id="ladderContent">
-		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customRecentCharacterFilter) | limitTo: limitVar : beginVar track by c.id" ng-class="c.victory ? 'win' : 'loss'" ng-click="showCharacterHistory(c.character.id)">
-		    				<td width="170"><img width="20" height="20" ng-src='/images/icons/races/race_{{c.character.character_race_id}}_{{c.character.gender_id}}.png' /> <img width="20" height="20" ng-src='/images/icons/specs/spec_{{c.character.character_spec_id}}.png' /> {{c.character.name}}</td>
+		    			<tr ng-repeat="c in filteredRecentCharacters = (characters | filter: customRecentCharacterFilter) | limitTo: limitVar : beginVar track by c.id" ng-class="c.victory ? 'win' : 'loss'" ng-click="showCharacterHistory(c.character.id)">
+		    				<td width="170"><img width="20" height="20" ng-src='/images/icons/races/race_{{c.character.character_race_id}}_{{c.character.gender_id}}.png' title="{{races[c.character.character_race_id - 1].name}}" data-toggle="tooltip" data-placement="top" tooltip /> <img width="20" height="20" ng-src='/images/icons/specs/spec_{{c.character.character_spec_id}}.png' title="{{specs[c.character.character_spec_id].name + ' ' + classes[c.character.character_class_id - 1].name}}" data-toggle="tooltip" data-placement="top" tooltip /> {{c.character.name}}</td>
 		    				<td width="200" class="hidden-xs-down"><img width="20" height="20" ng-src='/images/icons/factions/faction_{{c.character.faction_id}}.png' /> {{c.character.realm_name}}</td>
 		    				<td class="">{{c.new_rating}}</td>
 		    				<td class="hidden-xs-down">{{c.victory ? '+' : '-'}}{{c.rating_change}}</td>
 		    				<td width="150" class="text-xs-right" am-time-ago="c.retrieved_time"></td>
 		    			</tr>
+		    			<tr ng-hide="!loading">
+		    				<td colspan="5" class="text-xs-center">Loading the ladder...</td>
+		    			</tr>
 		    			<tr ng-hide="loading || characters.length">
 		    				<td colspan="5" class="text-xs-center">No recent activity was found.</td>
 		    			</tr>
-		    			<tr ng-hide="loading || filteredCharacters.length || !characters.length">
+		    			<tr ng-hide="loading || filteredRecentCharacters.length || !characters.length">
 		    				<td colspan="5" class="text-xs-center">No characters were found.</td>
 		    			</tr>
 		    		</tbody>
 		    	</table>
-		    	<div id="pagination" class="hidden-sm-down col-md-12">
-			    	<nav class="text-xs-center">
-			    		<ul class="pagination">
-						    <li class="page-item" ng-class="{ disabled : pagination.current == 1 }">
-						        <a class="page-link" href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
-						    </li>
-						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope page-item">
-						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding page-link">‹</a>
-						    </li>
-						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled page-item ng-scope">
-						        <a href="" class="ng-binding page-link">...</a>
-						    </li>
-						    <li class="page-item" ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
-						        <a class="page-link" href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
-						    </li>
-						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope page-item">
-						        <a href="" class="ng-binding page-link">...</a>
-						    </li>
-						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope page-item">
-						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding page-link">›</a>
-						    </li>
-						    <li class="page-item" ng-class="{ disabled : pagination.current == pagination.last }">
-						        <a class="page-link" href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
-						    </li>
-						</ul>
-					</nav>
-				</div>
 		    </div>
 	  </div>
 	</div>

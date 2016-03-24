@@ -3,70 +3,94 @@
 	<div id="loadingGif" style="position: absolute;height: 50px;width: 50px;top: calc(50% - 50px);left: calc(50% - 50px);z-index: 2147483647; display:none;">
 		<%= image_tag('kappa-loading.gif') %>
 	</div>
-		<div class="row m-t-1 text-xs-center">
-			<div class="col-xs-12">
-				<h2><%= current_bracket.display_name %> Match History</h2>
-			</div>
-		</div>
-		<div class="row">
+		<div class="row m-t-1">
 		    <div class="col-md-offset-2 col-xs-12 col-md-8 p-x-0">
 		    	<div class="row">
 			    	<div class="col-md-6 col-xs-12 text-center-xs text-left-not-xs">
-			    		<h3><%= image_tag('icons/races/race_' + @character.character_race_id.to_s + '_' + @character.gender_id.to_s + '.png', width:32, height:32) %> <%= image_tag('icons/classes/class_' + @character.character_class_id.to_s + '.png', width:32, height:32) %> <%= image_tag('icons/specs/spec_' + @character.character_spec_id.to_s + '.png', width:32, height:32) %> <%= @character.name %></h3>
+			    		<h3><%= image_tag('icons/races/race_' + @character.character_race_id.to_s + '_' + @character.gender_id.to_s + '.png', width:32, height:32, title: @character.character_race.name, data: {toggle: "tooltip", placement: "top"}) %> <%= image_tag('icons/classes/class_' + @character.character_class_id.to_s + '.png', width:32, height:32, title: @character.character_class.name, data: {toggle: "tooltip", placement: "top"}) %> <%= image_tag('icons/specs/spec_' + @character.character_spec_id.to_s + '.png', width:32, height:32, title: @character.character_spec.name, data: {toggle: "tooltip", placement: "top"}) %> <%= link_to @character.name, 'http://' + @region.abbr + '.battle.net/wow/character/' + @realm.slug + '/' + @character.name + '/simple', target: :_blank %></h3>
 			    	</div>
 			    	<div class="col-md-6 col-xs-12 text-xs-center text-sm-right">
-			    		<h3><%= image_tag('icons/factions/faction_' + @character.faction_id.to_s + '.png', width:32, height:32) %> <%= @character.realm_name %></h3>
+			    		<h3><%= image_tag('icons/factions/faction_' + @character.faction_id.to_s + '.png', width:32, height:32, title: @faction.name.capitalize, data: {toggle: "tooltip", placement: "top"}) %> <%= @character.realm_name %></h3>
 			    	</div>
 		    	</div>
-		    	<table class="table table-hover table-sm">
-		    		<thead>
-		    			<tr>
-		    				<th width="50">#</th>
-		    				<th>Rating</th>
-		    				<th>+/-</th>
-		    				<th class="text-right">Time</th>
-		    			</tr>
-		    		</thead>
-		    		<tbody id="ladderContent">
-		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.victory ? 'win' : 'loss'">
-		    				<th width="50" scope="row">{{$index + 1}}</th>
-		    				<td>{{c.new_rating}}</td>
-		    				<td>{{c.victory ? '+' : '-'}}{{c.rating_change}}</td>
-		    				<td class="text-right">{{c.retrieved_time | amDateFormat: 'MM/DD/YYYY hh:mm A'}}</td>
-		    			</tr>
-		    			<tr ng-hide="loading || characters.length">
-		    				<td colspan="5" class="text-xs-center">No matches found for this bracket.</td>
-		    			</tr>
-		    		</tbody>
-		    	</table>
-		    	<div id="pagination" class="hidden-sm-down col-md-12">
-			    	<nav class="text-xs-center">
-			    		<ul class="pagination">
-						    <li class="page-item" ng-class="{ disabled : pagination.current == 1 }">
-						        <a class="page-link" href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
-						    </li>
-						    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope page-item">
-						        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding page-link">‹</a>
-						    </li>
-						    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled page-item ng-scope">
-						        <a href="" class="ng-binding page-link">...</a>
-						    </li>
-						    <li class="page-item" ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
-						        <a class="page-link" href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
-						    </li>
-						    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope page-item">
-						        <a href="" class="ng-binding page-link">...</a>
-						    </li>
-						    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope page-item">
-						        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding page-link">›</a>
-						    </li>
-						    <li class="page-item" ng-class="{ disabled : pagination.current == pagination.last }">
-						        <a class="page-link" href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
-						    </li>
-						</ul>
-					</nav>
-				</div>
 		    </div>
-	  </div>
+		</div>
+		<div class="row text-xs-center">
+			<div class="col-md-offset-2 col-xs-12 col-md-8 p-x-0">
+				<ul class="nav nav-tabs" role="tablist">
+				  <li class="nav-item">
+				    <a class="nav-link active" data-toggle="tab" href="#match-history" role="tab">Match History</a>
+				  </li>
+				  <!-- <li class="nav-item">
+				    <a class="nav-link" data-toggle="tab" href="#rating-graph" role="tab">Rating Graph</a>
+				  </li>
+				  <li class="nav-item">
+				    <a class="nav-link" data-toggle="tab" href="#quick-stats" role="tab">Quick Stats</a>
+				  </li> -->
+				</ul>
+			</div>
+		</div>
+		<div class="tab-content">
+			<div class="tab-pane active" id="match-history" role="tab-panel">
+				<div class="row">
+				    <div class="col-md-offset-2 col-xs-12 col-md-8 p-x-0">
+				    	<table class="table table-hover table-sm">
+				    		<thead>
+				    			<tr>
+				    				<th width="50">#</th>
+				    				<th>Rating</th>
+				    				<th>+/-</th>
+				    				<th class="text-right">Time</th>
+				    			</tr>
+				    		</thead>
+				    		<tbody id="ladderContent">
+				    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | limitTo: limitVar : beginVar" ng-class="c.victory ? 'win' : 'loss'">
+				    				<th width="50" scope="row">{{$index + 1}}</th>
+				    				<td>{{c.new_rating}}</td>
+				    				<td>{{c.victory ? '+' : '-'}}{{c.rating_change}}</td>
+				    				<td class="text-right">{{c.retrieved_time | amDateFormat: 'MM/DD/YYYY hh:mm A'}}</td>
+				    			</tr>
+				    			<tr ng-hide="loading || characters.length">
+				    				<td colspan="5" class="text-xs-center">No matches found for this bracket.</td>
+				    			</tr>
+				    		</tbody>
+				    	</table>
+				    	<div ng-if="pagination.last > 1" id="pagination" class="hidden-sm-down col-md-12">
+					    	<nav class="text-xs-center">
+					    		<ul class="pagination">
+								    <li class="page-item" ng-class="{ disabled : pagination.current == 1 }">
+								        <a class="page-link" href="" ng-click="pagination.current == 1 || setCurrentPage(1)">&laquo;</a>
+								    </li>
+								    <li ng-class="{ disabled : pagination.current == 1 }" class="ng-scope page-item">
+								        <a href="" ng-click="pagination.current == 1 || setCurrentPage(pagination.current - 1)" class="ng-binding page-link">‹</a>
+								    </li>
+								    <li ng-if="pagination.current - 4 > 1 && pagination.last - 8 > 1" class="disabled page-item ng-scope">
+								        <a href="" class="ng-binding page-link">...</a>
+								    </li>
+								    <li class="page-item" ng-repeat="pageNumber in pages track by $index" ng-class="{ active : pagination.current == pageNumber, disabled : pageNumber == '...' }">
+								        <a class="page-link" href="" ng-click="setCurrentPage(pageNumber)">{{ pageNumber }}</a>
+								    </li>
+								    <li ng-if="pagination.current + 4 < pagination.last && pagination.last > pagination.current + 8" class="disabled ng-scope page-item">
+								        <a href="" class="ng-binding page-link">...</a>
+								    </li>
+								    <li ng-class="{ disabled : pagination.current == pagination.last }" class="ng-scope page-item">
+								        <a href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.current + 1)" class="ng-binding page-link">›</a>
+								    </li>
+								    <li class="page-item" ng-class="{ disabled : pagination.current == pagination.last }">
+								        <a class="page-link" href="" ng-click="pagination.current == pagination.last || setCurrentPage(pagination.last)">&raquo;</a>
+								    </li>
+								</ul>
+							</nav>
+						</div>
+				    </div>
+			    </div>
+		  	</div>
+		  	<div class="tab-pane active" id="rating-graph" role="tab-panel">
+
+		  	</div>
+		  	<div class="tab-pane active" id="quick-stats" role="tab-panel">
+
+		  	</div>
+	  	</div>
 	</div>
 </body>

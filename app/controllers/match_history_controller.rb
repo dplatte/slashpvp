@@ -14,6 +14,9 @@ class MatchHistoryController < ApplicationController
 
   def character
     @character = Character.find_by_id(params[:character_id])
+    @realm = Realm.find_by_name(@character.realm_name)
+    @region = Region.find_by_id(@character.region_id)
+    @faction = Faction.find_by_id(@character.faction_id)
   end
 
   def characterJson
