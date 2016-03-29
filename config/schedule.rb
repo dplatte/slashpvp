@@ -5,7 +5,7 @@
 
 # Example:
 #
-set :environment, 'development' 
+#set :environment, 'development' 
 set :output, "log/whenever.log"
 #
 # every 2.hours do
