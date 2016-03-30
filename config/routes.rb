@@ -13,6 +13,8 @@ Rails.application.routes.draw do
   root 'character#recent'
   get '/:controller/:action'
 
+  match '*path', via: :all, to: 'pages#error_404'
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
