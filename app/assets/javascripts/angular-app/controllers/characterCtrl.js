@@ -1,4 +1,6 @@
-angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+var app = angular.module('app');
+
+app.controller('CharacterCtrl', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
 	
 	$scope.init = function() {
 		$scope.characters = [];
@@ -313,7 +315,9 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	});
 	
 	$scope.init();
-}]).directive('tooltip', function(){
+}]);
+
+app.directive('tooltip', function(){
     return {
         restrict: 'A',
         link: function(scope, element, attrs){
@@ -326,7 +330,9 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
             });
         }
     };
-}).directive('ngRightClick', function($parse) {
+});
+
+app.directive('ngRightClick', function($parse) {
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
         element.bind('contextmenu', function(event) {
