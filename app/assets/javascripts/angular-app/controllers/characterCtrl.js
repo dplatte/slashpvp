@@ -5,7 +5,7 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		$scope.filteredCharacters = [];
 		$scope.filteredRecentCharacters = [];
 		$scope.factions = [];
-		$scope.races = [];
+		$scope.races = {};
 		$scope.specs = {};
 		$scope.classes = [];
 		$scope.limitVar = 150;
@@ -15,7 +15,8 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		$scope.query = "";
 		$scope.sort = {
 			orderVar: '',
-			reverse: false
+			reverse: false,
+			newRating: '-new_rating'
 		};
 		$scope.classFilter = {
 			1: false,
@@ -149,10 +150,13 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 			"/character/ladderJson"
 		).success(function(data) {
 			$scope.characters = data.characters;
-			$scope.races = data.races;
 			$scope.classes = data.classes;
 			$scope.factions = data.factions;
 			$scope.loading = false;
+
+			$.each(data.races, function(key, value) {
+				$scope.races[value.id] = value;
+			});
 
 			$.each(data.specs, function(key, value) {
 				$scope.specs[value.id] = value;
@@ -166,10 +170,13 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 			"/character/recentJson", {}
 		).success(function(data) {
 			$scope.characters = JSON.parse(data.characters);
-			$scope.races = data.races;
 			$scope.classes = data.classes;
 			$scope.factions = data.factions;
 			$scope.loading = false;
+
+			$.each(data.races, function(key, value) {
+				$scope.races[value.id] = value;
+			});
 
 			$.each(data.specs, function(key, value) {
 				$scope.specs[value.id] = value;
@@ -180,12 +187,13 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		}, 30000);
 	};
 
-	$scope.getCharacterHistory = function(c_id) {
+	$scope.getCharacterHistory = function(realm, name) {
 		$scope.loading = true;
 		$http.get(
 			"/match_history/characterJson", { 
 				params: {
-					character_id: c_id
+					realm_name: realm,
+					character_name: name
 				}
 			}
 		).success(function(data) {
@@ -194,13 +202,29 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		});
 	};
 
-	$scope.showCharacterHistory = function(id) {
-		window.location.href = '/characterHistory/' + id;
+	$scope.showCharacterHistory = function(realm, name, newTab) {
+		
+		var url = '/error';
+
+		if(realm && name) {
+			url = '/character/' + realm + '/' + name;
+		}
+
+		if(newTab) {
+			window.open(url, '_blank');
+		} else {
+			window.location.href = url;
+		}
 	};
 
 	$scope.order = function(v) {
 		$scope.sort.reverse = ($scope.sort.orderVar === v) ? !$scope.sort.reverse : false;
 		$scope.sort.orderVar = v;
+		if($scope.sort.reverse) {
+			$scope.sort.newRating = 'new_rating';
+		} else {
+			$scope.sort.newRating = '-new_rating';
+		}
 	};
 
 	$scope.updateLowerLimits = function() {
@@ -301,5 +325,15 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
                 $(element).tooltip('hide');
             });
         }
+    };
+}).directive('ngRightClick', function($parse) {
+    return function(scope, element, attrs) {
+        var fn = $parse(attrs.ngRightClick);
+        element.bind('contextmenu', function(event) {
+            scope.$apply(function() {
+                event.preventDefault();
+                fn(scope, {$event:event});
+            });
+        });
     };
 });

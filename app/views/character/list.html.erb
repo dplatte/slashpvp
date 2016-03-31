@@ -38,9 +38,9 @@
 		    			</tr>
 		    		</thead>
 		    		<tbody id="ladderContent">
-		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | orderBy:sort.orderVar:sort.reverse | limitTo: limitVar : beginVar" class="" ng-click="showCharacterHistory(c.id)">
+		    			<tr ng-repeat="c in filteredCharacters = (characters | filter: customCharacterFilter) | orderBy:sort.orderVar:sort.reverse | limitTo: limitVar : beginVar" class="" ng-click="showCharacterHistory(c.realm_name, c.name, false)" ng-right-click="showCharacterHistory(c.realm_name, c.name, true)">
 		    				<th scope="row" width="40">{{c.ranking}}</th>
-		    				<td><img width="20" height="20" ng-src='/images/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' title="{{races[c.character_race_id - 1].name}}" data-toggle="tooltip" data-placement="top" tooltip /> <img width="20" height="20" ng-src='/images/icons/classes/class_{{c.character_class_id}}.png' title="{{classes[c.character_class_id - 1].name}}" data-toggle="tooltip" data-placement="top" tooltip /> <img width="20" height="20" ng-src='/images/icons/specs/spec_{{c.character_spec_id}}.png' title="{{specs[c.character_spec_id].name}}" data-toggle="tooltip" data-placement="top" tooltip /> {{c.name}}</td>
+		    				<td><img width="20" height="20" ng-src='/images/icons/races/race_{{c.character_race_id}}_{{c.gender_id}}.png' title="{{races[c.character_race_id].name}}" data-toggle="tooltip" data-placement="top" tooltip /> <img width="20" height="20" ng-src='/images/icons/classes/class_{{c.character_class_id}}.png' title="{{classes[c.character_class_id - 1].name}}" data-toggle="tooltip" data-placement="top" tooltip /> <img width="20" height="20" ng-src='/images/icons/specs/spec_{{c.character_spec_id}}.png' title="{{specs[c.character_spec_id].name}}" data-toggle="tooltip" data-placement="top" tooltip /> {{c.name}}</td>
 		    				<td class="hidden-xs-down"><img width="20" height="20" ng-src='/images/icons/factions/faction_{{c.faction_id}}.png' title="{{factions[c.faction_id]}}" data-toggle="tooltip" data-placement="top" tooltip /> {{c.realm_name}}</td>
 		    				<td width="70" class="text-xs-right">{{c.rating}}</td>
 		    			</tr>

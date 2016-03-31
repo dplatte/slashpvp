@@ -31,6 +31,14 @@ a:focus, a:active, a:hover, a:visited, .btn:focus, .btn.focus, .btn:active:focus
 	text-decoration:none;
 }
 
+.green {
+	color:#445C25;			
+}
+
+.red {
+	color:#E74C3C;
+}
+
 .btn {
 	border-radius:0;
 }
@@ -42,6 +50,10 @@ a:focus, a:active, a:hover, a:visited, .btn:focus, .btn.focus, .btn:active:focus
 
 .form-control {
 	border-radius:0;
+}
+
+.dropdown-item {
+	font-weight:100;
 }
 
 .dropdown-menu {

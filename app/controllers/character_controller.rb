@@ -44,7 +44,6 @@ class CharacterController < ApplicationController
     uniqueCharacterIds = Array.new
     duplicateHistoryIds = Array.new
 
-    Rails.logger.info(histories[0])
     histories.each do |history|
       if(!uniqueCharacterIds.include?(history.character.id))
         uniqueCharacterIds.push(history.character.id)

@@ -13,15 +13,38 @@ class MatchHistoryController < ApplicationController
   end
 
   def character
-    @character = Character.find_by_id(params[:character_id])
-    @realm = Realm.find_by_name(@character.realm_name)
-    @region = Region.find_by_id(@character.region_id)
-    @faction = Faction.find_by_id(@character.faction_id)
+    @character = Character.where(realm_name: params[:realm_name], name: params[:character_name], bracket_id: current_bracket.id, region_id: current_region.id).first
+    
+    @inBracket = true
+    if(!@character)
+      @inBracket = false
+      @character = Character.where(realm_name: params[:realm_name], name: params[:character_name], region_id: current_region.id).first
+    end
+
+    if(@character)
+      @realm = Realm.find_by_name(@character.realm_name)
+      @region = Region.find_by_id(@character.region_id)
+      @faction = Faction.find_by_id(@character.faction_id)
+      
+      highestOldRating = MatchHistory.where(character_id: @character.id).order(old_rating: :desc).first
+      highestNewRating = MatchHistory.where(character_id: @character.id).order(new_rating: :desc).first
+
+      if(highestOldRating && highestNewRating)
+        @highestRating = [highestOldRating.old_rating, highestNewRating.new_rating].max
+      elsif(@inBracket)
+        @highestRating = @character.rating
+      end
+    else
+      render :template => "pages/error_404"
+    end
+
   end
 
   def characterJson
-    histories = MatchHistory.includes(:character).where(character_id: params[:character_id], region_id: current_region.id, bracket_id: current_bracket.id).order('match_histories.retrieved_time DESC')
-  
+    character = Character.where(realm_name: params[:realm_name], name: params[:character_name], bracket_id: current_bracket.id, region_id: current_region.id).first
+    if(character)
+      histories = MatchHistory.includes(:character).where(character_id: character.id, region_id: current_region.id, bracket_id: current_bracket.id).order('match_histories.retrieved_time DESC')
+    end
     render :json => histories.to_json(:includes => :character)
   end
 end

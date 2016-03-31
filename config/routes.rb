@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   get '/api/ladder/:region/:bracket' => 'api#updateLadder'
   get '/ladder' => 'character#list'
   get '/recent' => 'character#recent'
-  get '/characterHistory/:character_id' => 'match_history#character'
+  get '/character/:realm_name/:character_name' => 'match_history#character'
   get '/calculator' => 'conquest_calc#calculator'
   get '/stats' => 'stats#index'
 
@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'character#recent'
   get '/:controller/:action'
+
+  get 'error', :to => 'pages#error_404'
 
   match '*path', via: :all, to: 'pages#error_404'
 
