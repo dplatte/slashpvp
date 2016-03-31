@@ -202,19 +202,15 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		});
 	};
 
-	$scope.showCharacterHistory = function(realm, name, newTab) {
+	$scope.showCharacterHistory = function(realm, name) {
 		
 		var url = '/error';
 
 		if(realm && name) {
 			url = '/character/' + realm + '/' + name;
 		}
-
-		if(newTab) {
-			window.open(url, '_blank');
-		} else {
-			window.location.href = url;
-		}
+		
+		window.location.href = url;
 	};
 
 	$scope.order = function(v) {
@@ -329,10 +325,19 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 }).directive('ngRightClick', ['$parse', function($parse) {
     return function(scope, element, attrs) {
         var fn = $parse(attrs.ngRightClick);
+        var realm = scope.$eval(attrs.ngRealm);
+        var name = scope.$eval(attrs.ngName);
         element.bind('contextmenu', function(event) {
+
+        	var url = '/error';
+			if(realm && name) {
+				url = '/character/' + realm + '/' + name;
+			}
+			window.open(url, '_blank');
+
             scope.$apply(function() {
-                event.preventDefault();
-                fn(scope, {$event:event});
+				event.preventDefault();
+            	fn(scope, {$event:event});
             });
         });
     };
