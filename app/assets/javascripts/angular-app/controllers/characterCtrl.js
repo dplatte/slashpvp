@@ -332,9 +332,9 @@ app.directive('tooltip', function(){
     };
 });
 
-app.directive('ngRightClick', function($parse) {
+app.directive('contextmenu', function($parse) {
     return function(scope, element, attrs) {
-        var fn = $parse(attrs.ngRightClick);
+        var fn = $parse(attrs.contextmenu);
         element.bind('contextmenu', function(event) {
             scope.$apply(function() {
                 event.preventDefault();
