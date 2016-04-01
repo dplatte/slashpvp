@@ -122,7 +122,8 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	$scope.customRecentCharacterFilter = function (c) {
 	    var re = new RegExp($scope.query, 'i');
 
-	    return ($scope.classFilter[c.character.character_class_id] || 
+	    return ( 
+	    	$scope.specFilter[c.character.character_spec_id] || 
 	    	noFilter($scope.classFilter)) &&
 	    	re.test(c.character.name);
 	};
@@ -130,7 +131,7 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 	$scope.customCharacterFilter = function (character) {
 	    var re = new RegExp($scope.query, 'i');
 
-	    return ($scope.classFilter[character.character_class_id] || 
+	    return ($scope.specFilter[character.character_spec_id] || 
 	    	noFilter($scope.classFilter)) &&
 	    	re.test(character.name);
 	};
@@ -270,38 +271,59 @@ angular.module('app').controller('CharacterCtrl', ['$scope', '$http', '$timeout'
 		} 
 	});
 
-	$('.filterClassIcon').on('click', function(){
+	$('.filterClassIcon').on('click', function(e){
+		var specElems = $(this).siblings('ul').children('li');
         if(!$(this).is('.checked')){
             $(this).addClass('checked');
             $scope.classFilter[$(this).data('id')] = true;
+            $.each(specElems, function(key, elem) {
+            	$scope.specFilter[$(elem).children('a').data('id')] = true;
+            	$(elem).children('a').addClass('checked');
+            });
             $('#filterIcon').css('color', '#3498DB');
         } else {
             $(this).removeClass('checked');
             $scope.classFilter[$(this).data('id')] = false;
+            $.each(specElems, function(key, elem) {
+            	$scope.specFilter[$(elem).children('a').data('id')] = false;
+            	$(elem).children('a').removeClass('checked');
+            });
             if($('.filterClassIcon.checked').length == 0) {
             	$('#filterIcon').css('color', '')
             }
         }
         $scope.$apply();
+        e.stopPropagation();
     });
 
-	$('.filterSpecIcon').on('click', function(){
+	$('.filterSpecIcon').on('click', function(e){
+		var classElem = $(this).parents('.dropdown-menu').first().siblings('.filterClassIcon');
         if(!$(this).is('.checked')){
             $(this).addClass('checked');
-            if(!$(this).parent().siblings('.filterClassIcon').is('.checked')){
-            	$(this).parent().siblings('.filterClassIcon').addClass('checked');
+            if(!$(classElem).is('.checked')){
+            	$(classElem).addClass('checked');
+            	$scope.classFilter[$(classElem).data('id')] = true;
             }
             $scope.specFilter[$(this).data('id')] = true;
+            $('#filterIcon').css('color', '#3498DB');
         } else {
             $(this).removeClass('checked');
-            if($(this).siblings('.filterSpecIcon.checked').length == 0) {
-            	if($(this).siblings('.filterClassIcon').is('.checked')){
-            		$(this).parent().siblings('.filterClassIcon').removeClass('checked');
+            if($(this).parent('li').siblings('li').children('.filterSpecIcon.checked').length == 0) {
+            	if($(classElem).is('.checked')){
+            		$(classElem).removeClass('checked');
+            		$scope.classFilter[$(classElem).data('id')] = false;
+            		$('#filterIcon').css('color', '');
+            		$.each($scope.classFilter, function(key, value) {
+		            	if(value == true) {
+		            		$('#filterIcon').css('color', '#3498DB');
+		            	}
+		            });
             	}
             } 
             $scope.specFilter[$(this).data('id')] = false;
         }
         $scope.$apply();
+        e.stopPropagation();
     });
 
 	$(window).resize(function() {
