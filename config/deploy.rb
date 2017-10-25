@@ -69,21 +69,20 @@ namespace :deploy do
     end
   end
 
+  desc "Update crontab with whenever"
+  task :update_cron do
+    on roles(:app) do
+      within current_path do
+        execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
+      end
+    end
+  end
+
   before :starting,     :check_revision
   after  :finishing,    :compile_assets
   after  :finishing,    :cleanup
+  after  :finishing,    :update_cron
 end
-
-  # desc "Update crontab with whenever"
-  # task :update_cron do
-  #   on roles(:app) do
-  #     within current_path do
-  #       execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
-  #     end
-  #   end
-  # end
-
-  #after :finishing,     'deploy:update_cron'
 
 # ps aux | grep puma    # Get puma pid
 # kill -s SIGUSR2 pid   # Restart puma
