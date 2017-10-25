@@ -1,1 +1,1 @@
-server "34.208.229.149", user: 'deploy', roles: %w{app web db}
+server "34.208.229.149", user: 'deploy', roles: [:app, :web, :db]
