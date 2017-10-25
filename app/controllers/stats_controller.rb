@@ -12,6 +12,7 @@ class StatsController < ApplicationController
 
 	    class_colors = HashWithIndifferentAccess.new({
 	    	'Death Knight': '#C41F3B',
+	    	'Demon Hunter': '#A330C9',
 	    	'Druid': '#FF7D0A',
 	    	'Hunter': '#ABD473',
 	    	'Mage': '#69CCF0',

@@ -93,21 +93,6 @@ class ApiController < ApplicationController
           end
         end
       end
-
-      glyphsList = value['glyphs']
-      glyphsList.each do |k|
-        glyph = Glyph.find_by_id(k['glyph'])
-        if(!glyph) 
-          glyph = Glyph.new
-          glyph.id = k['glyph']
-          glyph.item_id = k['item']
-          glyph.name = k['name']
-          glyph.icon = k['icon']
-          glyph.type_id = k['typeId']
-          glyph.character_class = characterClass
-          glyph.save
-        end
-      end
     end
 
     render :json => @response

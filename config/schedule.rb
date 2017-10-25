@@ -5,7 +5,7 @@
 
 # Example:
 #
-#set :environment, 'development' 
+set :environment, 'development' 
 set :output, "log/whenever.log"
 #
 # every 2.hours do
@@ -17,8 +17,7 @@ set :output, "log/whenever.log"
 every 5.minutes do
 	runner "Character.updateLadder('us','3v3')"
 	runner "sleep 75; Character.updateLadder('us','2v2')"
-	runner "sleep 150; Character.updateLadder('us','5v5')"
-	#runner "sleep 225; Character.updateLadder('us','rbg')"
+	runner "sleep 150; Character.updateLadder('us','rbg')"
 	# runner "sleep 28; Character.updateLadder('eu','3v3')"
 	# runner "sleep 35; Character.updateLadder('eu','2v2')"
 	# runner "sleep 42; Character.updateLadder('eu','5v5')"

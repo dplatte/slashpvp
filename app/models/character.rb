@@ -19,7 +19,10 @@ class Character < ActiveRecord::Base
 
     if(region && bracket)
       api_key = ENV["BATTLE_NET_API_KEY"]
-      resp = HTTParty.get(region.domain + '/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key, timeout: 30)
+      respTime = Time.now
+      resp = HTTParty.get(region.domain + '/wow/leaderboard/' + bracket.name + '?locale=' + region.locales.first.abbr + '&apikey=' + api_key, timeout: 5)
+      respTime = Time.now - respTime
+      Rails.logger.info("Response Time: " + respTime.to_s)
       if(resp.success?)
         response = JSON.parse(resp.body)['rows']
 
@@ -64,12 +67,6 @@ class Character < ActiveRecord::Base
         end
 
         #clean up characters that fell off the ladder
-        Rails.logger.info('Winning Alliance: ' + winningAllianceCharacterIds.length.to_s)
-        Rails.logger.info('Losing Alliance: ' + losingAllianceCharacterIds.length.to_s)
-        Rails.logger.info('Winning Horde: ' + winningHordeCharacterIds.length.to_s)
-        Rails.logger.info('Losing Horde: ' + losingHordeCharacterIds.length.to_s)
-
-
         unchangedCharacters = Character.where.not(ranking: nil).where(id: unchangedCharacterIds, bracket_id: bracket.id, region_id: region.id)
         unchangedCharacters.each do |c|
           c.update_attributes(ranking: nil)
