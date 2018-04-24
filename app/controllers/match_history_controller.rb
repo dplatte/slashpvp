@@ -22,8 +22,8 @@ class MatchHistoryController < ApplicationController
     end
 
     if(@character)
-      @realm = Realm.find_by_name(@character.realm_name)
       @region = Region.find_by_id(@character.region_id)
+      @realm = Realm.find_by_name_and_region_id(@character.realm_name, @character.region_id)
       @faction = Faction.find_by_id(@character.faction_id)
       
       highestOldRating = MatchHistory.where(character_id: @character.id).where.not(old_rating: nil).order(old_rating: :desc).first

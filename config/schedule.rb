@@ -14,22 +14,19 @@ set :output, "log/whenever.log"
 #   rake "some:great:rake:task"
 # end
 #
-every 5.minutes do
+every 24.minutes do
 	runner "Character.updateLadder('us','3v3')"
-	runner "sleep 100; Character.updateLadder('us','2v2')"
-	runner "sleep 200; Character.updateLadder('us','rbg')"
-	# runner "sleep 28; Character.updateLadder('eu','3v3')"
-	# runner "sleep 35; Character.updateLadder('eu','2v2')"
-	# runner "sleep 42; Character.updateLadder('eu','5v5')"
-	# runner "sleep 49; Character.updateLadder('eu','rbg')"
-	# runner "sleep 40; Character.updateLadder('kr','3v3')"
-	# runner "sleep 45; Character.updateLadder('kr','2v2')"
-	# runner "sleep 48; Character.updateLadder('kr','5v5')"
-	# runner "sleep 50; Character.updateLadder('kr','rbg')"
-	# runner "sleep 52; Character.updateLadder('tw','3v3')"
-	# runner "sleep 54; Character.updateLadder('tw','2v2')"
-	# runner "sleep 56; Character.updateLadder('tw','5v5')"
-	# runner "sleep 58; Character.updateLadder('tw','rbg')"
+	runner "sleep 120; Character.updateLadder('us','2v2')"
+	runner "sleep 240; Character.updateLadder('us','rbg')"
+	runner "sleep 360; Character.updateLadder('eu','3v3')"
+	runner "sleep 480; Character.updateLadder('eu','2v2')"
+	runner "sleep 600; Character.updateLadder('eu','rbg')"
+	runner "sleep 720; Character.updateLadder('kr','3v3')"
+	runner "sleep 840; Character.updateLadder('kr','2v2')"
+	runner "sleep 960; Character.updateLadder('kr','rbg')"
+	runner "sleep 1080; Character.updateLadder('tw','3v3')"
+	runner "sleep 1200; Character.updateLadder('tw','2v2')"
+	runner "sleep 1320; Character.updateLadder('tw','rbg')"
 end
 
 

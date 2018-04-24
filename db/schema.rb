@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151117063508) do
+ActiveRecord::Schema.define(version: 20180424033224) do
 
   create_table "brackets", force: true do |t|
     t.string   "name"
@@ -150,7 +150,10 @@ ActiveRecord::Schema.define(version: 20151117063508) do
     t.string   "locale"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "region_id"
   end
+
+  add_index "realms", ["region_id"], name: "index_realms_on_region_id", using: :btree
 
   create_table "regions", force: true do |t|
     t.string   "name"

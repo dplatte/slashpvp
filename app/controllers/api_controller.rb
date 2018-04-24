@@ -145,26 +145,33 @@ class ApiController < ApplicationController
   end
 
   def updateRealms
-    require 'net/http'
-    api_key = Rails.application.secrets.battlenet_api_key
-    uri = URI('https://us.api.battle.net/wow/realm/status?locale=en_US&apikey=' + api_key)
-    req = Net::HTTP.get(uri)
 
-    @response = JSON.parse(req)["realms"]
+    region = Region.find_by_abbr(params[:region].downcase)
+    if(region)
+      require 'net/http'
+      api_key = Rails.application.secrets.battlenet_api_key
+      uri = URI(region.domain + '/wow/realm/status?locale=' + region.locales.first.abbr + '&apikey=' + api_key)
+      req = Net::HTTP.get(uri)
 
-    @response.each do |c|
-      realm = Realm.find_by_name(c['name'])
-      if(!realm)
-        realm = Realm.new
-        realm.name = c['name']
-        realm.slug = c['slug']
-        realm.realm_type  =c['type']
-        realm.population  =c['population']
-        realm.queue  =c['queue']
-        realm.status  =c['status']
-        realm.timezone  =c['timezone']
-        realm.locale  =c['locale']
-        realm.save
+      @response = JSON.parse(req)["realms"]
+
+      if(@response != nil)
+        @response.each do |c|
+          realm = Realm.find_by_name_and_region_id(c['name'], region.id)
+          if(!realm)
+            realm = Realm.new
+            realm.name = c['name']
+            realm.slug = c['slug']
+            realm.realm_type  =c['type']
+            realm.population  =c['population']
+            realm.queue  =c['queue']
+            realm.status  =c['status']
+            realm.timezone  =c['timezone']
+            realm.locale  =c['locale']
+            realm.region_id = region.id
+            realm.save
+          end
+        end
       end
     end
 
@@ -180,7 +187,7 @@ class ApiController < ApplicationController
     if(region && bracket)
       Character.updateLadder(region.abbr,bracket.name)
     end
-    
+
     render :json => "success"
   end
 
