@@ -26,8 +26,8 @@ class MatchHistoryController < ApplicationController
       @region = Region.find_by_id(@character.region_id)
       @faction = Faction.find_by_id(@character.faction_id)
       
-      highestOldRating = MatchHistory.where(character_id: @character.id).order(old_rating: :desc).first
-      highestNewRating = MatchHistory.where(character_id: @character.id).order(new_rating: :desc).first
+      highestOldRating = MatchHistory.where(character_id: @character.id).where.not(old_rating: nil).order(old_rating: :desc).first
+      highestNewRating = MatchHistory.where(character_id: @character.id).where.not(new_rating: nil).order(new_rating: :desc).first
 
       if(highestOldRating && highestNewRating)
         @highestRating = [highestOldRating.old_rating, highestNewRating.new_rating].max
