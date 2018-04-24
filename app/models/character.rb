@@ -17,6 +17,8 @@ class Character < ActiveRecord::Base
     region = Region.find_by_abbr(r.downcase)
     bracket = Bracket.find_by_name(b.downcase)
 
+    Rails.logger.info(time.to_s + ': Starting cron job for the ' + region.name + ' ' + bracket.name + ' ladder.')
+
     if(region && bracket)
       api_key = ENV["BATTLE_NET_API_KEY"]
       respTime = Time.now
@@ -24,39 +26,24 @@ class Character < ActiveRecord::Base
       respTime = Time.now - respTime
       Rails.logger.info("Response Time: " + respTime.to_s)
       if(resp.success?)
+        Rails.logger.info(Time.now.to_s + ': Obtained JSON for the ' + region.name + ' ' + bracket.name + ' ladder.')
         response = JSON.parse(resp.body)['rows']
 
-        unchangedCharacterIds = Character.where(bracket_id: bracket.id, region_id: region.id).where.not(ranking: nil).pluck(:id)
+        unchangedCharacterIds = Character.where(bracket_id: bracket.id, region_id: region.id).pluck(:id)
 
         groupTime = DateTime.now
-
-        winningAllianceCharacterIds = Array.new
-        losingAllianceCharacterIds = Array.new
-        winningHordeCharacterIds = Array.new
-        losingHordeCharacterIds = Array.new
-        
-        ActiveRecord::Base.transaction do
+        Character.transaction do
           response.each do |s|
             #create and/or select character
             character = Character.where(name: s['name'], realm_name: s['realmName'], bracket_id: bracket.id, region_id: region.id).first_or_initialize
 
-            next if character.season_wins != nil && (s['seasonWins'] < character.season_wins || s['seasonLosses'] < character.season_losses)
-
             #check for recent match
-            if(character.season_wins != nil && s['seasonWins'].to_i == character.season_wins + 1 && s['seasonLosses'].to_i == character.season_losses && character.ranking != nil)
-              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: true, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: s['rating'] - character.rating, rank_change: character.ranking - s['ranking'], retrieved_time: groupTime, season_wins: s['seasonWins'], season_losses: s['seasonLosses'])
-              if s['factionId'] == 0
-                winningAllianceCharacterIds.push(character.id)
-              else
-                winningHordeCharacterIds.push(character.id)
-              end
-            elsif (character.season_losses != nil && s['seasonLosses'].to_i == character.season_losses + 1 && s['seasonWins'].to_i == character.season_wins  && character.ranking != nil)
-              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: false, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: character.rating - s['rating'], rank_change: s['ranking'] - character.ranking, retrieved_time: groupTime, season_wins: s['seasonWins'], season_losses: s['seasonLosses'])
-              if s['factionId'] == 0
-                losingAllianceCharacterIds.push(character.id)
-              else
-                losingHordeCharacterIds.push(character.id)
-              end
+            if(character.season_wins != nil && character.season_losses != nil && s['seasonWins'] > character.season_wins && (s['seasonWins'] - character.season_wins >= s['seasonLosses'] - character.season_losses))
+              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: true, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: s['rating'] - character.rating, rank_change: character.ranking - s['ranking'], retrieved_time: groupTime)
+              Rails.logger.info("Found a recent match for : " + character.name.to_s)
+            elsif (character.season_losses != nil && character.season_wins != nil && s['seasonLosses'] > character.season_losses)
+              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: false, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: character.rating - s['rating'], rank_change: s['ranking'] - character.ranking, retrieved_time: groupTime)
+              Rails.logger.info("Found a recent match for : " + character.name.to_s)
             end
 
             #update character
@@ -66,13 +53,13 @@ class Character < ActiveRecord::Base
           end
         end
 
+        Rails.logger.info(Time.now.to_s + ': Done looping through JSON for ' + region.name + ' ' + bracket.name + ' ladder.')
+
         #clean up characters that fell off the ladder
         unchangedCharacters = Character.where.not(ranking: nil).where(id: unchangedCharacterIds, bracket_id: bracket.id, region_id: region.id)
         unchangedCharacters.each do |c|
           c.update_attributes(ranking: nil)
         end
-
-
       end
     end
 
