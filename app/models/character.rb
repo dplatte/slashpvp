@@ -39,10 +39,10 @@ class Character < ActiveRecord::Base
 
             #check for recent match
             if(character.season_wins != nil && character.season_losses != nil && s['seasonWins'] > character.season_wins && (s['seasonWins'] - character.season_wins >= s['seasonLosses'] - character.season_losses))
-              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: true, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: (character.ranking ? character.ranking : 0), rank_change: (character.ranking ? character.ranking : 0), retrieved_time: groupTime)
+              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: true, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: (character.rating != nil ? s['rating'] - character.rating : 0), rank_change: (character.ranking != nil ? character.ranking - s['ranking'] : 0), retrieved_time: groupTime)
               Rails.logger.info("Found a recent match for : " + character.name.to_s)
             elsif (character.season_losses != nil && character.season_wins != nil && s['seasonLosses'] > character.season_losses)
-              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: false, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: (character.rating ? character.rating : 0), rank_change: (character.ranking ? character.ranking : 0), retrieved_time: groupTime)
+              MatchHistory.create(character_id: character.id, bracket_id: bracket.id, region_id: region.id, victory: false, old_rating: character.rating, new_rating: s['rating'], old_ranking: character.ranking, new_ranking: s['ranking'], rating_change: (character.rating != nil ? character.rating - s['rating'] : 0), rank_change: (character.ranking != nil ? s['ranking'] - character.ranking : 0), retrieved_time: groupTime)
               Rails.logger.info("Found a recent match for : " + character.name.to_s)
             end
 
