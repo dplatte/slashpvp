@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get '/character/:realm_name/:character_name' => 'match_history#character'
   get '/calculator' => 'conquest_calc#calculator'
   get '/stats' => 'stats#index'
+  get '/about' => 'pages#about'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
